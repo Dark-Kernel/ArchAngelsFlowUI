@@ -18,7 +18,33 @@ const HomePage = ({ onNavigate = () => {} }) => {
       <div 
         className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:4rem_4rem]"
         style={{ maskImage: 'linear-gradient(to bottom, transparent, black 10%, black 90%, transparent)' }}
-      ></div>
+      >
+        {/* Spark Trails */}
+        <div className="spark-trail absolute h-20 w-px bg-gradient-to-b from-white/0 via-white to-white/0" 
+             style={{ left: '20%', top: '10%', animation: 'sparkMove 3s ease-in-out infinite' }}></div>
+        <div className="spark-trail absolute h-32 w-px bg-gradient-to-b from-white/0 via-white to-white/0" 
+             style={{ left: '60%', top: '30%', animation: 'sparkMove 4s ease-in-out infinite 1s' }}></div>
+        <div className="spark-trail absolute h-24 w-px bg-gradient-to-b from-white/0 via-white to-white/0" 
+             style={{ left: '85%', top: '60%', animation: 'sparkMove 3.5s ease-in-out infinite 0.5s' }}></div>
+      </div>
+
+      {/* Add keyframes for spark animation */}
+      <style jsx>{`
+        @keyframes sparkMove {
+          0% {
+            opacity: 0;
+            transform: translateY(0) scaleY(1);
+          }
+          50% {
+            opacity: 1;
+            transform: translateY(30vh) scaleY(1.2);
+          }
+          100% {
+            opacity: 0;
+            transform: translateY(60vh) scaleY(1);
+          }
+        }
+      `}</style>
 
       {/* Content */}
       <div className="relative">

@@ -3,7 +3,7 @@ import { Menu, Rocket } from 'lucide-react';
 
 const Navbar = ({ onNavigate = () => {} }) => {
   return (
-    <div className="navbar bg-gradient-to-r from-slate-900 to-indigo-900 text-white sticky top-0 z-50 backdrop-blur-sm bg-opacity-90">
+    <div className="navbar bg-gradient-to-r from-slate-900 to-indigo-900 text-white sticky top-0 z-50 backdrop-blur-sm bg-opacity-90 rounded-b-4xl">
       {/* Logo Section */}
       <div className="flex-1">
         <button onClick={() => onNavigate('/')} className="btn btn-ghost text-xl font-bold">
