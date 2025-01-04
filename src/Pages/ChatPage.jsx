@@ -1,121 +1,150 @@
 import React, { useState } from 'react';
-import { Send, Bot, User } from 'lucide-react';
-
-const LoadingDots = () => (
-  <div className="flex items-center justify-center space-x-2">
-    <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
-    <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
-    <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce"></div>
-  </div>
-);
+import LangflowClient from '../services/langflowService';
 
 const ChatPage = () => {
-  const [messages, setMessages] = useState([]);
-  const [inputMessage, setInputMessage] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+    const [inputValue, setInputValue] = useState('');
+    const [outputValue, setOutputValue] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState(null);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!inputMessage.trim()) return;
+    const runLangflow = async () => {
+        console.log('Starting Langflow request...');
+        const flowIdOrName = '';
+        const langflowId = '';
+        const applicationToken = '';
+        
+        console.log('Input value:', inputValue);
+        
+        const tweaks = {
+            "ChatInput-7Sd79": {},
+            "ParseData-28GbZ": {},
+            "Prompt-viJiv": {},
+            "SplitText-0GTRM": {},
+            "ChatOutput-luUBP": {},
+            "AstraDB-UVnCB": {},
+            "AstraDB-hS23C": {},
+            "File-rRqLW": {},
+            "NVIDIAEmbeddingsComponent-6MWbK": {},
+            "NVIDIAModelComponent-5fQ9O": {},
+            "NVIDIAEmbeddingsComponent-YXIze": {}
+        };
 
-    const newMessage = {
-      role: 'user',
-      content: inputMessage,
-      timestamp: new Date().toISOString(),
+        const langflowClient = new LangflowClient(
+            'http://localhost:3001/api/langflow',
+            applicationToken
+        );
+
+        setIsLoading(true);
+        setError(null);
+        
+        try {
+            console.log('Sending request to Langflow...');
+            const response = await langflowClient.runFlow(
+                flowIdOrName,
+                langflowId,
+                inputValue,
+                'chat',
+                'chat',
+                tweaks,
+                false,
+                (data) => console.log('Update:', data),
+                (message) => console.log('Stream Closed:', message),
+                (error) => {
+                    console.error('Stream Error:', error);
+                    setError('Stream error occurred');
+                }
+            );
+
+            console.log('Full response:', response);
+
+            if (response && response.outputs && response.outputs[0]) {
+                // Extract the message text from the response
+                const messageText = response.outputs[0].outputs[0].messages[0].message;
+                console.log('Message text:', messageText);
+                setOutputValue(messageText);
+            } else {
+                console.log('No outputs in response:', response);
+                setError('No output received from the server');
+            }
+        } catch (error) {
+            console.error('Error running flow:', error);
+            setError(error.message || 'An error occurred while processing your request');
+        } finally {
+            setIsLoading(false);
+        }
     };
 
-    setMessages(prev => [...prev, newMessage]);
-    setInputMessage('');
-    setIsLoading(true);
-
-    setTimeout(() => {
-      const aiResponse = {
-        role: 'assistant',
-        content: 'This is a simulated AI response. Replace this with actual API integration.',
-        timestamp: new Date().toISOString(),
-      };
-      setMessages(prev => [...prev, aiResponse]);
-      setIsLoading(false);
-    }, 1000);
-  };
-
-  const MessageBubble = ({ message }) => {
-    const isUser = message.role === 'user';
     return (
-      <div className={`chat ${isUser ? 'chat-end' : 'chat-start'}`}>
-        <div className="chat-image avatar">
-          <div className="w-10 rounded-full bg-slate-700 p-2">
-            {isUser ? 
-              <User className="w-full h-full text-white" /> : 
-              <Bot className="w-full h-full text-blue-400" />
-            }
-          </div>
-        </div>
-        <div className={`chat-bubble ${
-          isUser ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-200'
-        }`}>
-          {message.content}
-        </div>
-        <div className="chat-footer opacity-50 text-xs">
-          {new Date(message.timestamp).toLocaleTimeString()}
-        </div>
-      </div>
-    );
-  };
+        <div className="container mx-auto p-6 max-w-4xl">
+            <div className="bg-white rounded-xl shadow-lg p-8 border border-gray-200">
+                <h1 className="text-3xl font-bold text-gray-800 mb-6">
+                    Social Media Analysis Chat
+                </h1>
 
-  return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-950 via-blue-950 to-violet-950 text-white font-sans">
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
-        {/* Chat Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-violet-400">
-            AI Chat Assistant
-          </h1>
-          <p className="text-slate-300 mt-2">
-            Ask anything about your social media performance
-          </p>
-        </div>
+                <div className="space-y-6">
+                    {/* Input Section */}
+                    <div className="space-y-3">
+                        <label className="block text-lg font-medium text-gray-600">
+                            Ask a Question
+                        </label>
+                        <textarea
+                            className="w-full p-4 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                            placeholder="What's your social media question?"
+                            value={inputValue}
+                            onChange={(e) => setInputValue(e.target.value)}
+                            rows={5}
+                            disabled={isLoading}
+                        />
+                    </div>
 
-        {/* Chat Messages Container */}
-        <div className="bg-white/5 rounded-lg shadow-xl mb-4 p-4 min-h-[60vh] max-h-[60vh] overflow-y-auto backdrop-blur-sm">
-          {messages.length === 0 ? (
-            <div className="h-full flex items-center justify-center text-slate-500">
-              <p>Start a conversation by sending a message below</p>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {messages.map((message, index) => (
-                <MessageBubble key={index} message={message} />
-              ))}
-              {isLoading && (
-                <div className="flex justify-center py-4">
-                  <LoadingDots />
+                    {/* Submit Button */}
+                    <div>
+                        <button
+                            className={`w-full py-3 rounded-lg text-white text-lg font-medium shadow-md transition ${
+                                isLoading
+                                    ? 'bg-gray-400 cursor-not-allowed'
+                                    : 'bg-blue-600 hover:bg-blue-700'
+                            }`}
+                            onClick={runLangflow}
+                            disabled={isLoading || !inputValue.trim()}
+                        >
+                            {isLoading ? (
+                                <div className="flex items-center justify-center space-x-2">
+                                    <span className="animate-spin border-t-2 border-white border-solid rounded-full w-5 h-5"></span>
+                                    <span>Analyzing...</span>
+                                </div>
+                            ) : (
+                                'Get Analysis'
+                            )}
+                        </button>
+                    </div>
+
+                    {/* Error Display */}
+                    {error && (
+                        <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg shadow-sm">
+                            <p className="text-sm text-red-700">{error}</p>
+                        </div>
+                    )}
+
+                    {/* Output Section */}
+                    {outputValue && (
+                        <div className="bg-gray-100 rounded-lg p-6 border border-gray-300 shadow-md">
+                            <h2 className="text-lg font-semibold text-gray-700 mb-3">
+                                Analysis Result
+                            </h2>
+                            <div className="prose prose-sm max-w-none text-gray-800">
+                                {outputValue.split('\n').map((line, index) => (
+                                    <p key={index} className="mb-2">
+                                        {line}
+                                    </p>
+                                ))}
+                            </div>
+                        </div>
+                    )}
                 </div>
-              )}
             </div>
-          )}
         </div>
-
-        {/* Input Form */}
-        <form onSubmit={handleSubmit} className="relative">
-          <input
-            type="text"
-            value={inputMessage}
-            onChange={(e) => setInputMessage(e.target.value)}
-            placeholder="Type your message here..."
-            className="w-full input input-lg bg-white/5 backdrop-blur-sm border-white/20 pr-16 focus:border-white/50 focus:ring-2 focus:ring-white/20 placeholder-white/50"
-          />
-          <button
-            type="submit"
-            disabled={!inputMessage.trim() || isLoading}
-            className="absolute right-2 top-1/2 -translate-y-1/2 btn btn-circle btn-ghost text-blue-400 hover:bg-blue-900/50"
-          >
-            <Send className={`h-6 w-6 ${isLoading ? 'opacity-50' : ''}`} />
-          </button>
-        </form>
-      </div>
-    </div>
-  );
+    );
 };
 
 export default ChatPage;
