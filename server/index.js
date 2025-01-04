@@ -1,8 +1,10 @@
-import express from 'express';
-import cors from 'cors';
-import fetch from 'node-fetch';
-import dotenv from 'dotenv';
+const express = require('express');
+const cors = require('cors');
+const fetch = require('node-fetch');
+const dotenv = require('dotenv');
+const path = require('path');
 
+// Load environment variables from .env file
 dotenv.config();
 
 const app = express();
@@ -51,14 +53,14 @@ app.post('/api/langflow', async (req, res) => {
 
         console.log('Langflow API Response Status:', response.status);
         
-        const responseData = await response.json();
-        
         if (!response.ok) {
-            console.error('Error from Langflow API:', responseData);
-            return res.status(response.status).json(responseData);
+            const errorData = await response.text();
+            console.error('Error from Langflow API:', errorData);
+            return res.status(response.status).json({ error: errorData });
         }
 
-        console.log('Successfully received response from Langflow API:', responseData);
+        const responseData = await response.json();
+        console.log('Successfully received response from Langflow API');
         res.json(responseData);
     } catch (error) {
         console.error('Proxy Error:', error);

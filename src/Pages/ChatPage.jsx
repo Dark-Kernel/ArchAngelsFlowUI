@@ -10,9 +10,9 @@ const ChatPage = () => {
 
     const runLangflow = async () => {
         console.log('Starting Langflow request...');
-       
-        
-        console.log('Input value:', inputValue);
+        const flowIdOrName = import.meta.env.VITE_FLOWIDORNAME;
+        const langflowId = import.meta.env.VITE_LANGFLOWID;
+        const applicationToken = import.meta.env.VITE_LANGFLOW_TOKEN;
         
         const tweaks = {
             "ChatInput-7Sd79": {},
@@ -37,7 +37,6 @@ const ChatPage = () => {
         setError(null);
         
         try {
-            console.log('Sending request to Langflow...');
             const response = await langflowClient.runFlow(
                 flowIdOrName,
                 langflowId,
@@ -54,15 +53,10 @@ const ChatPage = () => {
                 }
             );
 
-            console.log('Full response:', response);
-
             if (response && response.outputs && response.outputs[0]) {
-                // Extract the message text from the response
                 const messageText = response.outputs[0].outputs[0].messages[0].message;
-                console.log('Message text:', messageText);
                 setOutputValue(messageText);
             } else {
-                console.log('No outputs in response:', response);
                 setError('No output received from the server');
             }
         } catch (error) {
