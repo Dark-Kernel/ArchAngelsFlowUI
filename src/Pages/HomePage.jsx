@@ -37,7 +37,7 @@ const HomePage = ({ onNavigate = () => {} }) => {
                 Get real-time insights, predict trends, and outperform your competition.
               </p>
               <button 
-                onClick={() => onNavigate('/signup')}
+                onClick={() => onNavigate('/analytics')}
                 className="btn btn-lg bg-gradient-to-r from-indigo-600 to-purple-600 border-none hover:from-indigo-700 hover:to-purple-700 shadow-lg hover:scale-105 transition-all"
               >
                 Start Your Journey
