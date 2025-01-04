@@ -12,6 +12,7 @@ import {
   Home,
   Info
 } from 'lucide-react';
+import { Github } from 'lucide-react';
 
 const Footer = ({ onNavigate = () => {} }) => {
   return (
@@ -41,36 +42,13 @@ const Footer = ({ onNavigate = () => {} }) => {
       </div> 
 
       <div>
-        <span className="footer-title opacity-100 text-indigo-300">Services</span> 
-        <a className="link link-hover flex items-center gap-2 hover:text-indigo-300 transition-colors">
-          <BarChart2 className="h-4 w-4" />
-          Smart Analytics
-        </a>
-        <a className="link link-hover flex items-center gap-2 hover:text-indigo-300 transition-colors">
-          <TrendingUp className="h-4 w-4" />
-          Growth Tracking
-        </a>
-        <a className="link link-hover flex items-center gap-2 hover:text-indigo-300 transition-colors">
-          <Target className="h-4 w-4" />
-          Competitor Intel
-        </a>
-        <a className="link link-hover flex items-center gap-2 hover:text-indigo-300 transition-colors">
-          <FileText className="h-4 w-4" />
-          AI Reports
-        </a>
-      </div> 
-
-      <div>
         <span className="footer-title opacity-100 text-indigo-300">Social</span> 
         <div className="flex gap-4">
-          <a className="hover:text-indigo-300 transition-colors hover:scale-110 transform">
-            <Twitter className="h-6 w-6" />
-          </a>
           <a className="hover:text-indigo-300 transition-colors hover:scale-110 transform">
             <Youtube className="h-6 w-6" />
           </a>
           <a className="hover:text-indigo-300 transition-colors hover:scale-110 transform">
-            <Facebook className="h-6 w-6" />
+            <Github className="h-6 w-6" />
           </a>
         </div>
       </div>
