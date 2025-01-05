@@ -1,69 +1,83 @@
-import { Line, Bar, Pie } from 'react-chartjs-2';
+import React, { useState } from 'react';
+import { Line, Pie } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
   PointElement,
   LineElement,
-  BarElement,
   ArcElement,
   Title,
   Tooltip,
   Legend,
 } from 'chart.js';
 
-// Register ChartJS components
 ChartJS.register(
   CategoryScale,
   LinearScale,
   PointElement,
   LineElement,
-  BarElement,
   ArcElement,
   Title,
   Tooltip,
   Legend
 );
 
+const ErrorMessage = ({ message, type = 'error' }) => {
+  const bgColor = type === 'error' ? 'bg-red-500/10' : 'bg-yellow-500/10';
+  const borderColor = type === 'error' ? 'border-red-500/20' : 'border-yellow-500/20';
+  const textColor = type === 'error' ? 'text-red-500' : 'text-yellow-500';
+
+  return (
+    <div className={`${bgColor} border ${borderColor} rounded-lg p-4 ${textColor}`}>
+      {message}
+    </div>
+  );
+};
+
 export const AnalysisVisualizer = ({ analysisText }) => {
-  // Parse the analysis text to extract data
-  const parseAnalysisData = (text) => {
-    // Example parsing logic - adjust based on your AI output format
-    const lines = text.split('\n');
-    const data = {
-      postTypes: {
-        reels: 0,
-        carousel: 0,
-        static: 0
-      },
-      performance: [],
-      trends: []
-    };
 
-    lines.forEach(line => {
-      if (line.includes('Reels')) {
-        const percentage = line.match(/(\d+)%/);
-        if (percentage) data.postTypes.reels = parseInt(percentage[1]);
-      }
-      if (line.includes('Carousel')) {
-        const percentage = line.match(/(\d+)%/);
-        if (percentage) data.postTypes.carousel = parseInt(percentage[1]);
-      }
-      if (line.includes('static')) {
-        const percentage = line.match(/(\d+)%/);
-        if (percentage) data.postTypes.static = parseInt(percentage[1]);
-      }
-    });
+  // Parse the analysis text
+  const summaryMatch = analysisText.match(/---SUMMARY---([\s\S]*?)---VISUALIZATION_DATA---/);
+  const summary = summaryMatch ? summaryMatch[1].trim() : '';
 
-    return data;
-  };
+  const jsonMatch = analysisText.match(/---VISUALIZATION_DATA---([\s\S]*)/);
+  let jsonString = jsonMatch ? jsonMatch[1].trim() : '';
 
-  const data = parseAnalysisData(analysisText);
+  // Attempt to find and extract only the JSON part
+  const jsonStartIndex = jsonString.indexOf('{');
+  const jsonEndIndex = jsonString.lastIndexOf('}');
+  if (jsonStartIndex !== -1 && jsonEndIndex !== -1) {
+    jsonString = jsonString.slice(jsonStartIndex, jsonEndIndex + 1);
+  }
+
+  let data = null;
+  let parseError = null;
+
+  try {
+    data = JSON.parse(jsonString);
+  } catch (error) {
+    console.error('Failed to parse JSON:', error);
+    parseError = 'Failed to parse the analysis data. Please try again.';
+  }
+
+  if (!data) {
+    return <ErrorMessage message={parseError || 'No data available'} />;
+  }
+
+  if (!data['Post type distribution'] || !data['Weekly engagement rates (last month)'] || 
+      !data['Top performing post types'] || !data['Monthly performance trends']) {
+    return <ErrorMessage message="The analysis data is incomplete or in an unexpected format." type="warning" />;
+  }
 
   const pieData = {
     labels: ['Reels', 'Carousel Posts', 'Static Posts'],
     datasets: [{
-      data: [data.postTypes.reels || 35, data.postTypes.carousel || 40, data.postTypes.static || 25],
+      data: [
+        data['Post type distribution'].Reels,
+        data['Post type distribution'].Carousel,
+        data['Post type distribution'].Static
+      ],
       backgroundColor: [
         'rgba(99, 102, 241, 0.8)',
         'rgba(147, 51, 234, 0.8)',
@@ -83,11 +97,35 @@ export const AnalysisVisualizer = ({ analysisText }) => {
     datasets: [
       {
         label: 'Engagement Rate',
-        data: [65, 59, 80, 81],
+        data: data['Weekly engagement rates (last month)'],
         borderColor: 'rgb(99, 102, 241)',
         backgroundColor: 'rgba(99, 102, 241, 0.5)',
         tension: 0.4,
       }
+    ],
+  };
+
+  const monthlyTrendsData = {
+    labels: Object.keys(data['Monthly performance trends']),
+    datasets: [
+      {
+        label: 'Reels',
+        data: Object.values(data['Monthly performance trends']).map(item => item.Reels),
+        borderColor: 'rgb(99, 102, 241)',
+        backgroundColor: 'rgba(99, 102, 241, 0.5)',
+      },
+      {
+        label: 'Carousel',
+        data: Object.values(data['Monthly performance trends']).map(item => item.Carousel),
+        borderColor: 'rgb(147, 51, 234)',
+        backgroundColor: 'rgba(147, 51, 234, 0.5)',
+      },
+      {
+        label: 'Static',
+        data: Object.values(data['Monthly performance trends']).map(item => item.Static),
+        borderColor: 'rgb(59, 130, 246)',
+        backgroundColor: 'rgba(59, 130, 246, 0.5)',
+      },
     ],
   };
 
@@ -121,6 +159,15 @@ export const AnalysisVisualizer = ({ analysisText }) => {
 
   return (
     <div className="space-y-6">
+      <div className="bg-slate-800/50 rounded-xl p-6 border border-white/10">
+        <h3 className="text-lg font-semibold text-white/90 mb-4">Summary</h3>
+        <div className="prose prose-invert max-w-none">
+          {summary.split('\n').map((line, index) => (
+            <p key={index}>{line}</p>
+          ))}
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="bg-slate-800/50 rounded-xl p-6 border border-white/10">
           <h3 className="text-lg font-semibold text-white/90 mb-4">Post Distribution</h3>
@@ -129,7 +176,7 @@ export const AnalysisVisualizer = ({ analysisText }) => {
           </div>
         </div>
         <div className="bg-slate-800/50 rounded-xl p-6 border border-white/10">
-          <h3 className="text-lg font-semibold text-white/90 mb-4">Performance Trends</h3>
+          <h3 className="text-lg font-semibold text-white/90 mb-4">Weekly Engagement Rates</h3>
           <div className="h-[300px]">
             <Line data={performanceData} options={options} />
           </div>
@@ -137,13 +184,24 @@ export const AnalysisVisualizer = ({ analysisText }) => {
       </div>
       
       <div className="bg-slate-800/50 rounded-xl p-6 border border-white/10">
-        <h3 className="text-lg font-semibold text-white/90 mb-4">Key Insights</h3>
-        <div className="prose prose-invert prose-sm max-w-none">
-          {analysisText.split('\n').map((line, index) => (
-            <p key={index} className="text-white/80">{line}</p>
+        <h3 className="text-lg font-semibold text-white/90 mb-4">Monthly Performance Trends</h3>
+        <div className="h-[300px]">
+          <Line data={monthlyTrendsData} options={options} />
+        </div>
+      </div>
+
+      <div className="bg-slate-800/50 rounded-xl p-6 border border-white/10">
+        <h3 className="text-lg font-semibold text-white/90 mb-4">Top Performing Post Types</h3>
+        <div className="space-y-2">
+          {Object.entries(data['Top performing post types']).map(([type, rate], index) => (
+            <div key={index} className="flex justify-between items-center">
+              <span className="text-white/80">{type}</span>
+              <span className="text-white/80">{rate}% Engagement Rate</span>
+            </div>
           ))}
         </div>
       </div>
     </div>
   );
 };
+

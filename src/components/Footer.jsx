@@ -15,6 +15,7 @@ import {
 import { Github } from 'lucide-react';
 import logo from '../../public/arch-insght-logo.png'
 
+// eslint-disable-next-line react/prop-types
 const Footer = ({ onNavigate = () => {} }) => {
   return (
     <footer className="footer p-10 bg-gradient-to-r from-indigo-900 to-indigo-800 text-white">
@@ -23,7 +24,7 @@ const Footer = ({ onNavigate = () => {} }) => {
                   <img src={logo} className=' w-28'/>
         
         </button>
-        <p className="max-w-xs">Revolutionizing social media analytics with AI-powered insights for tomorrow's digital leaders</p>
+        <p className="max-w-xs">Revolutionizing social media analytics with AI-powered insights for tomorrow&apos;s digital leaders</p>
       </div> 
       
       <div>

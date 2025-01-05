@@ -58,6 +58,11 @@ const ChatPage = () => {
                 const messageText = response.outputs[0].outputs[0].messages[0].message;
                 const markdownText = removeMarkdown(messageText);
                 setOutputValue(markdownText);
+                // In your ChatPage.tsx
+if (markdownText) {
+    const messageText = response.outputs[0].outputs[0].messages[0].message;
+    setOutputValue(messageText);
+}
             } else {
                 setError('No output received from the server');
             }
@@ -151,9 +156,9 @@ const ChatPage = () => {
                             </div>
                         )}
 
-                        {outputValue && (
-                            <AnalysisVisualizer analysisText={outputValue} />
-                        )}
+{outputValue && (
+  <AnalysisVisualizer analysisText={outputValue} />
+)}
                     </div>
                 </div>
             </div>
