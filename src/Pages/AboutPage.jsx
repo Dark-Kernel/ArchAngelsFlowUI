@@ -45,11 +45,11 @@ const AboutPage = ({ onNavigate = () => {} }) => {
         {/* About Section */}
         <div className="max-w-4xl mx-auto mb-16 text-center">
           <h1 className="text-4xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-violet-400 bg-clip-text text-transparent">
-            About ArchFlow
+            About ArchInsight
           </h1>
           <div className="bg-white-900/80 backdrop-blur-lg rounded-2xl p-8 border border-white/10 ">
             <p className="text-lg text-white/80 leading-relaxed">
-              ArchFlow is a cutting-edge social media analysis platform that leverages the power of AI to provide 
+            ArchInsight is a cutting-edge social media analysis platform that leverages the power of AI to provide 
               deep insights into your social media strategy. Built with modern technologies including React, 
               Langflow, and advanced AI models, our platform helps businesses and individuals make data-driven 
               decisions about their social media presence.

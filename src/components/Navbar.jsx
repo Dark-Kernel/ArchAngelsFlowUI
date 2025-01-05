@@ -1,5 +1,6 @@
 import React from 'react';
 import { Menu, Rocket } from 'lucide-react';
+import logo from '../../public/arch-insght-logo.png'
 
 const Navbar = ({ onNavigate = () => {} }) => {
   return (
@@ -7,8 +8,9 @@ const Navbar = ({ onNavigate = () => {} }) => {
       {/* Logo Section */}
       <div className="flex-1">
         <button onClick={() => onNavigate('/')} className="btn btn-ghost text-xl font-bold">
-          <Rocket className="h-6 w-6 mr-2 animate-bounce" />
-          SocialMetrics
+          {/* <Rocket className="h-6 w-6 mr-2 animate-bounce" />
+          SocialMetrics */}
+          <img src={logo} className='w-full h-full'/>
         </button>
       </div>
 

@@ -13,14 +13,15 @@ import {
   Info
 } from 'lucide-react';
 import { Github } from 'lucide-react';
+import logo from '../../public/arch-insght-logo.png'
 
 const Footer = ({ onNavigate = () => {} }) => {
   return (
     <footer className="footer p-10 bg-gradient-to-r from-indigo-900 to-indigo-800 text-white">
       <div className="flex flex-col gap-4">
         <button onClick={() => onNavigate('/')} className="flex items-center text-2xl font-bold hover:scale-105 transition-transform">
-          <Rocket className="h-8 w-8 mr-2" />
-          SocialMetrics
+                  <img src={logo} className=' w-28'/>
+        
         </button>
         <p className="max-w-xs">Revolutionizing social media analytics with AI-powered insights for tomorrow's digital leaders</p>
       </div> 
