@@ -67,12 +67,6 @@ const Navbar = ({ onNavigate = () => {} }) => {
             </button>
           </li>
           <li>
-            <button 
-              className="btn bg-gradient-to-r from-indigo-600 to-purple-600 text-white border-none hover:from-indigo-700 hover:to-purple-700 transition-all hover:scale-105"
-              onClick={() => onNavigate('/chat')}
-            >
-              Get Started
-            </button>
           </li>
         </ul>
       </div>
