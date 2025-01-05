@@ -1,6 +1,7 @@
 # 🌟 **SocialMetrics**  
 
 Unlock the power of your social media data with our advanced analytics platform! Designed to provide actionable insights, our platform uses cutting-edge tools to analyze engagement metrics and offer personalized content strategies tailored to your audience's behavior.  
+![image](https://github.com/user-attachments/assets/a5afc7bb-5650-43fc-a6d6-4de6bc1deeef)
 
 ---
 
