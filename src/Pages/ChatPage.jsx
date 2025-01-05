@@ -9,11 +9,9 @@ const ChatPage = () => {
     const [error, setError] = useState(null);
 
     const runLangflow = async () => {
-        console.log('Starting Langflow request...');
         const flowIdOrName = import.meta.env.VITE_FLOWIDORNAME;
         const langflowId = import.meta.env.VITE_LANGFLOWID;
         const applicationToken = import.meta.env.VITE_LANGFLOW_TOKEN;
-        console.log(applicationToken, 'applicaiton token')
         
         const tweaks = {
             "ChatInput-7Sd79": {},
@@ -75,6 +73,19 @@ const ChatPage = () => {
                 className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:4rem_4rem]"
                 style={{ maskImage: 'linear-gradient(to bottom, transparent, black 10%, black 90%, transparent)' }}
             ></div>
+                 {/* Grid Pattern Overlay */}
+      <div 
+        className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:4rem_4rem]"
+        style={{ maskImage: 'linear-gradient(to bottom, transparent, black 10%, black 90%, transparent)' }}
+      >
+        {/* Spark Trails */}
+        <div className="spark-trail absolute h-20 w-px bg-gradient-to-b from-white/0 via-white to-white/0" 
+             style={{ left: '20%', top: '10%', animation: 'sparkMove 3s ease-in-out infinite' }}></div>
+        <div className="spark-trail absolute h-32 w-px bg-gradient-to-b from-white/0 via-white to-white/0" 
+             style={{ left: '60%', top: '30%', animation: 'sparkMove 4s ease-in-out infinite 1s' }}></div>
+        <div className="spark-trail absolute h-24 w-px bg-gradient-to-b from-white/0 via-white to-white/0" 
+             style={{ left: '85%', top: '60%', animation: 'sparkMove 3.5s ease-in-out infinite 0.5s' }}></div>
+      </div>
 
             <div className="container mx-auto px-4 max-w-4xl relative">
                 <div className="bg-slate-900/80 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/10 overflow-hidden">
