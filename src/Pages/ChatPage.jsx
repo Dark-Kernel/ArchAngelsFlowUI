@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Sparkles } from 'lucide-react';
 import LangflowClient from '../services/langflowService';
+import { AnalysisVisualizer } from '../components/analysis-visualizer';
 
 const ChatPage = () => {
     const [inputValue, setInputValue] = useState('');
@@ -66,6 +67,8 @@ const ChatPage = () => {
         }
     };
 
+    console.log(outputValue, 'value')
+
     return (
         <div className="min-h-screen bg-gradient-to-b from-slate-950 via-blue-950 to-violet-950 py-8 relative">
             {/* Grid Pattern Overlay */}
@@ -87,7 +90,7 @@ const ChatPage = () => {
              style={{ left: '85%', top: '60%', animation: 'sparkMove 3.5s ease-in-out infinite 0.5s' }}></div>
       </div>
 
-            <div className="container mx-auto px-4 max-w-4xl relative">
+            <div className="container mx-auto px-4 max-w-5xl relative">
                 <div className="bg-slate-900/80 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/10 overflow-hidden">
                     {/* Header */}
                     <div className="bg-gradient-to-r from-blue-600/20 to-violet-600/20 border-b border-white/10 p-6">
@@ -115,7 +118,7 @@ const ChatPage = () => {
                             />
                         </div>
 
-                        {/* Submit Button */}
+                
                         <div>
                             <button
                                 className={`w-full py-3 rounded-xl text-white text-lg font-medium shadow-lg transition ${
@@ -140,27 +143,14 @@ const ChatPage = () => {
                             </button>
                         </div>
 
-                        {/* Error Display */}
                         {error && (
                             <div className="bg-red-900/30 border border-red-500/30 p-4 rounded-xl">
                                 <p className="text-red-300">{error}</p>
                             </div>
                         )}
 
-                        {/* Output Section */}
                         {outputValue && (
-                            <div className="bg-slate-800/50 rounded-xl p-6 border border-white/10">
-                                <h2 className="text-lg font-semibold text-white/90 mb-4">
-                                    Analysis Result
-                                </h2>
-                                <div className="prose prose-invert prose-sm max-w-none text-white/80">
-                                    {outputValue.split('\n').map((line, index) => (
-                                        <p key={index} className="mb-2">
-                                            {line}
-                                        </p>
-                                    ))}
-                                </div>
-                            </div>
+                            <AnalysisVisualizer analysisText={outputValue} />
                         )}
                     </div>
                 </div>
@@ -170,3 +160,4 @@ const ChatPage = () => {
 };
 
 export default ChatPage;
+
