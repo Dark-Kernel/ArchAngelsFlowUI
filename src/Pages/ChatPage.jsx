@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Sparkles } from 'lucide-react';
 import LangflowClient from '../services/langflowService';
 import { AnalysisVisualizer } from '../components/analysis-visualizer';
-
+import removeMarkdown from "markdown-to-text";
 const ChatPage = () => {
     const [inputValue, setInputValue] = useState('');
     const [outputValue, setOutputValue] = useState('');
@@ -10,6 +10,7 @@ const ChatPage = () => {
     const [error, setError] = useState(null);
 
     const runLangflow = async () => {
+     
         const flowIdOrName = import.meta.env.VITE_FLOWIDORNAME;
         const langflowId = import.meta.env.VITE_LANGFLOWID;
         const applicationToken = import.meta.env.VITE_LANGFLOW_TOKEN;
@@ -55,7 +56,8 @@ const ChatPage = () => {
 
             if (response && response.outputs && response.outputs[0]) {
                 const messageText = response.outputs[0].outputs[0].messages[0].message;
-                setOutputValue(messageText);
+                const markdownText = removeMarkdown(messageText);
+                setOutputValue(markdownText);
             } else {
                 setError('No output received from the server');
             }
