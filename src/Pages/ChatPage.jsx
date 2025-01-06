@@ -34,7 +34,7 @@ const ChatPage = () => {
         };
 
         const langflowClient = new LangflowClient(
-            'http://localhost:3001/api/langflow',
+            'https://archinsights.onrender.com/api/langflow',
             applicationToken
         );
 
