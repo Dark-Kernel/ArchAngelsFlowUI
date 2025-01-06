@@ -15,11 +15,9 @@ const ChatPage = () => {
         setIsVisible(true);
     }, []);
     const runLangflow = async () => {
-        console.log('Starting Langflow request...');
         const flowIdOrName = import.meta.env.VITE_FLOWIDORNAME;
         const langflowId = import.meta.env.VITE_LANGFLOWID;
         const applicationToken = import.meta.env.VITE_LANGFLOW_TOKEN;
-        console.log(applicationToken, 'applicaiton token')
         
         const tweaks = {
             "ChatInput-7Sd79": {},
