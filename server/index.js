@@ -74,6 +74,6 @@ app.post('/api/langflow', async (req, res) => {
 app.listen(PORT, () => {
     console.log(`Proxy server running on port ${PORT}`);
     console.log('Environment variables loaded:', {
-        LANGFLOW_TOKEN: process.env.LANGFLOW_TOKEN ? 'present' : 'missing'
+        LANGFLOW_TOKEN: process.env.VITE_LANGFLOW_TOKEN ? 'present' : 'missing'
     });
 });
