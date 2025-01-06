@@ -1,6 +1,6 @@
 class LangflowClient {
     constructor(baseURL, applicationToken) {
-        this.baseURL = 'http://localhost:3001/api/langflow';
+        this.baseURL = 'https://arch-angels-flow-ui.vercel.app/api/langflow';
         this.applicationToken = applicationToken;
     }
 

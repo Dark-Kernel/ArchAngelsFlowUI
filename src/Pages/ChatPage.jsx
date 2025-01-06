@@ -34,7 +34,7 @@ const ChatPage = () => {
         };
 
         const langflowClient = new LangflowClient(
-            'http://localhost:3001/api/langflow',
+            'https://arch-angels-flow-ui.vercel.app/api/langflow',
             applicationToken
         );
 
@@ -72,7 +72,6 @@ const ChatPage = () => {
         }
     };
 
-    console.log(outputValue, 'value')
     return (
         <div className="min-h-screen bg-gradient-to-b from-slate-950 via-blue-950 to-violet-950 py-8 relative overflow-hidden">
             {/* Enhanced Grid Pattern with Parallax Effect */}
