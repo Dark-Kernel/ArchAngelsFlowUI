@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Sparkles } from 'lucide-react';
 import LangflowClient from '../services/langflowService';
 import { AnalysisVisualizer } from '../components/analysis-visualizer';
-
+import LoadingState from '../components/loadingState';
 
 const ChatPage = () => {
     const [inputValue, setInputValue] = useState('');
@@ -10,10 +10,34 @@ const ChatPage = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
     const [isVisible, setIsVisible] = useState(false);
+    const [loadingState, setLoadingState] = useState(null);
+    const [currentLoadingMessage, setCurrentLoadingMessage] = useState(0);
+
+    const loadingMessages = [
+        "Analyzing your request...",
+        "Collecting social media data...",
+        "Processing engagement metrics...",
+        "Generating insights...",
+        "Preparing your analysis...",
+        "Almost there...",
+    ];
 
     useEffect(() => {
         setIsVisible(true);
     }, []);
+
+    useEffect(() => {
+        let interval;
+        if (isLoading) {
+            interval = setInterval(() => {
+                setCurrentLoadingMessage((prev) => 
+                    prev === loadingMessages.length - 1 ? 0 : prev + 1
+                );
+            }, 5000); // Change message every 2 seconds
+        }
+        return () => clearInterval(interval);
+    }, [isLoading, loadingMessages.length]);
+
     const runLangflow = async () => {
         const flowIdOrName = import.meta.env.VITE_FLOWIDORNAME;
         const langflowId = import.meta.env.VITE_LANGFLOWID;
@@ -42,6 +66,18 @@ const ChatPage = () => {
         setError(null);
         
         try {
+            // Simulate different loading states
+            setLoadingState('collecting');
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            
+            setLoadingState('analyzing');
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            
+            setLoadingState('processing');
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            
+            setLoadingState('generating');
+            
             const response = await langflowClient.runFlow(
                 flowIdOrName,
                 langflowId,
@@ -68,6 +104,7 @@ const ChatPage = () => {
             console.error('Error running flow:', error);
             setError(error.message || 'An error occurred while processing your request');
         } finally {
+            setLoadingState(null);
             setIsLoading(false);
         }
     };
@@ -147,9 +184,19 @@ const ChatPage = () => {
                                 disabled={isLoading || !inputValue.trim()}
                             >
                                 {isLoading ? (
-                                    <div className="flex items-center justify-center space-x-2">
-                                        <span className="animate-spin border-2 border-white/30 border-t-white rounded-full w-5 h-5"></span>
-                                        <span>Analyzing...</span>
+                                    <div className="flex flex-col items-center justify-center space-y-3">
+                                        <div className="flex items-center justify-center space-x-2">
+                                            <div className="relative">
+                                                <div className="w-8 h-8 border-4 border-blue-400/30 rounded-full animate-spin border-t-blue-500"></div>
+                                                <div className="absolute top-0 left-0 w-8 h-8 border-4 border-transparent rounded-full animate-pulse border-t-violet-500 animate-[spin_3s_linear_infinite]"></div>
+                                            </div>
+                                            <span className="text-white/90 animate-pulse">
+                                                {loadingMessages[currentLoadingMessage]}
+                                            </span>
+                                        </div>
+                                        <div className="w-full bg-slate-700/30 rounded-full h-1.5">
+                                            <div className="bg-gradient-to-r from-blue-500 to-violet-500 h-1.5 rounded-full animate-[loading_2s_ease-in-out_infinite]"></div>
+                                        </div>
                                     </div>
                                 ) : (
                                     <div className="flex items-center justify-center space-x-2">
@@ -178,8 +225,15 @@ const ChatPage = () => {
                 </div>
             </div>
 
+            {/* Loading Overlay */}
+            {isLoading && loadingState && (
+                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+                    <LoadingState state={loadingState} className="bg-background/95 rounded-lg shadow-lg" />
+                </div>
+            )}
+
             {/* Animation Keyframes */}
-            <style jsx>{`
+            <style >{`
                 @keyframes floatParticle {
                     0% {
                         transform: translateY(0) translateX(0) scale(0);
@@ -220,6 +274,17 @@ const ChatPage = () => {
                 }
                 .animate-fadeIn {
                     animation: fadeIn 0.5s ease-out forwards;
+                }
+                @keyframes loading {
+                    0% {
+                        width: 0%;
+                    }
+                    50% {
+                        width: 100%;
+                    }
+                    100% {
+                        width: 0%;
+                    }
                 }
             `}</style>
         </div>
