@@ -1,6 +1,6 @@
 class LangflowClient {
     constructor(baseURL, applicationToken) {
-        this.baseURL = 'https://archinsights.onrender.com/api/langflow';
+        this.baseURL = 'http://localhost:3001/api/langflow';
         this.applicationToken = applicationToken;
     }
 
