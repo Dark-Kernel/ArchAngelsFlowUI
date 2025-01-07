@@ -11,12 +11,14 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 
+const cors = require('cors');
+
 app.use(cors({
     origin: 'https://arch-insights.vercel.app',
-    methods: ['POST'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], 
+    allowedHeaders: ['Content-Type', 'Authorization'], 
 }));
-
+app.options('*', cors());
 app.use(express.json());
 
 // Add logging middleware

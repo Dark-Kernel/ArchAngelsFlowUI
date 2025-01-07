@@ -9,6 +9,11 @@
     "routes": [
       {
         "src": "/(.*)",
+        "headers": {
+          "Access-Control-Allow-Origin": "https://arch-insights.vercel.app",
+          "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+          "Access-Control-Allow-Headers": "Authorization, Content-Type"
+        },
         "dest": "/"
       }
     ]
