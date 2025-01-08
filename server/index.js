@@ -31,7 +31,7 @@ app.use((req, res, next) => {
 app.post('/api/langflow', async (req, res) => {
     console.log('Received request to /api/langflow');
     const { flowId, langflowId, body } = req.body;
-    const applicationToken = process.env.VITE_LANGFLOW_TOKEN;
+    const applicationToken = process.env.LANGFLOW_TOKEN;
     
     if (!flowId || !langflowId || !body) {
         console.error('Missing required parameters:', { flowId, langflowId, body: !!body });
@@ -78,9 +78,27 @@ app.post('/api/langflow', async (req, res) => {
     }
 });
 
+app.post('/api/astra', async (req, res) => {
+    try {
+      const { data, token, endpoint } = req.body;
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Cassandra-Token': token
+        },
+        body: JSON.stringify(data)
+      });
+      const result = await response.json();
+      res.json(result);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+  
 app.listen(PORT, () => {
     console.log(`Proxy server running on port ${PORT}`);
     console.log('Environment variables loaded:', {
-        LANGFLOW_TOKEN: process.env.VITE_LANGFLOW_TOKEN ? 'present' : 'missing'
+        LANGFLOW_TOKEN: process.env.LANGFLOW_TOKEN ? 'present' : 'missing'
     });
 });
