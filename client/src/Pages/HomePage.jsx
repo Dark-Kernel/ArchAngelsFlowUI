@@ -1,17 +1,61 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { 
   Rocket, Brain, BarChart2, Target, TrendingUp,
   Users, MessageSquare, CheckCircle, Sparkles,
   ArrowRight
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { processAndStoreData } from '../services/astradbClient';
+const HomePage = () => {
+  const [username, setUsername] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate()
 
-const HomePage = ({ onNavigate = () => {} }) => {
-  const [isVisible, setIsVisible] = useState(false);
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   if (!username) return;
 
-  useEffect(() => {
-    setIsVisible(true);
-  }, []);
+  //   setIsLoading(true);
+  //   try {
+  //     const response = await fetch(`https://instagramscraper.fly.dev/getdata?username=${username}`);
+  //     const data = await response.json();
+      
+  //     // Store data in localStorage
+  //     localStorage.setItem('instagramData', JSON.stringify(data));
+  //     localStorage.setItem('username', username);
+      
+  //     // Navigate to analytics page
+  //     navigate('/analytics');
+  //   } catch (error) {
+  //     console.error('Error fetching data:', error);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!username) return;
+  
+    setIsLoading(true);
+    try {
+      const response = await fetch(`https://instagramscraper.fly.dev/getdata?username=${username}`);
+      const data = await response.json();
+      
+      localStorage.setItem('instagramData', JSON.stringify(data));
+      localStorage.setItem('username', username);
+      
+      const result = await processAndStoreData();
+      console.log('Storage result:', result);
+      
+      navigate('/analytics');
+    } catch (error) {
+      console.error('Error:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
+  
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-950 via-blue-950 to-violet-950 text-white font-sans relative overflow-hidden">
       {/* Enhanced Grid Pattern with Parallax Effect */}
@@ -39,7 +83,7 @@ const HomePage = ({ onNavigate = () => {} }) => {
       </div>
 
       {/* Hero Section with Enhanced Animations */}
-      <div className={`relative min-h-screen flex items-center justify-center transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
+      {/* <div className={`relative min-h-screen flex items-center justify-center transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
         <div className="max-w-4xl px-4 text-center">
           <div className="relative mb-6 group">
             <Rocket className="h-16 w-16 text-indigo-400 mx-auto transform transition-transform group-hover:scale-110 group-hover:rotate-12" />
@@ -63,6 +107,47 @@ const HomePage = ({ onNavigate = () => {} }) => {
             <Brain className="h-5 w-5 ml-2 group-hover:animate-bounce" />
             <span className="absolute inset-0 rounded-lg bg-white/20 animate-ping opacity-0 group-hover:opacity-100" />
           </button>
+        </div>
+      </div> */}
+
+      <div className="relative min-h-screen flex items-center justify-center">
+        <div className="max-w-4xl px-4 text-center">
+        <div className="relative mb-6 group">
+            <Rocket className="h-16 w-16 text-indigo-400 mx-auto transform transition-transform group-hover:scale-110 group-hover:rotate-12" />
+            <div className="absolute inset-0 bg-indigo-500/20 blur-xl rounded-full scale-150 animate-pulse" />
+          </div>
+          <div className="mb-8">
+            
+          <h1 className="text-4xl md:text-6xl font-extrabold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400 animate-gradient">
+            Elevate Your Social Presence
+          </h1>
+            <p className="text-xl mb-8 text-secondary">
+              Enter your Instagram username to get detailed analytics and insights.
+            </p>
+          </div>
+
+          <form onSubmit={handleSubmit} className="flex flex-col items-center gap-4 max-w-md mx-auto">
+            <div className="form-control w-full">
+              <input
+                type="text"
+                placeholder="Enter your Instagram username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="input input-bordered input-primary w-full bg-opacity-20"
+              />
+            </div>
+            <button 
+              type="submit"
+              disabled={isLoading || !username}
+              className="btn btn-primary btn-lg w-full max-w-xs"
+            >
+              {isLoading ? (
+                <span className="loading loading-spinner"></span>
+              ) : (
+                'Analyze Profile'
+              )}
+            </button>
+          </form>
         </div>
       </div>
 
@@ -137,7 +222,7 @@ const HomePage = ({ onNavigate = () => {} }) => {
       </div>
 
       {/* Animation Keyframes */}
-      <style jsx>{`
+      <style >{`
         @keyframes float {
           0% {
             transform: translateY(0) scale(0);

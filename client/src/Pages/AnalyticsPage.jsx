@@ -1,153 +1,112 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { Line, Pie } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
   PointElement,
   LineElement,
-  BarElement,
   Title,
   Tooltip,
   Legend,
   ArcElement
 } from 'chart.js';
-import { Line, Bar, Pie } from 'react-chartjs-2';
-import { ChartCard } from '../components/chart-card';
-import { MetricCard } from '../components/metric-card';
-import { PostAnalyticsTable } from '../components/post-analytics-table';
-import { PostDetailModal } from '../components/post-detail-modal';
-import { Calendar, Download, RefreshCcw } from 'lucide-react';
 
-// Register ChartJS components
 ChartJS.register(
   CategoryScale,
   LinearScale,
   PointElement,
   LineElement,
-  BarElement,
   ArcElement,
   Title,
   Tooltip,
   Legend
 );
 
-// Sample data for the posts table
-const samplePosts = [
-  {
-    id: '1',
-    title: 'New Product Launch',
-    platform: 'Instagram',
-    engagement: 4.8,
-    reach: 15700,
-    likes: 1200,
-    shares: 300,
-    comments: 150,
-    date: '2024-01-15'
-  },
-  {
-    id: '2',
-    title: 'Customer Success Story',
-    platform: 'LinkedIn',
-    engagement: 5.2,
-    reach: 12500,
-    likes: 980,
-    shares: 245,
-    comments: 89,
-    date: '2024-01-14'
-  },
-  {
-    id: '3',
-    title: 'Behind the Scenes',
-    platform: 'Instagram',
-    engagement: 6.1,
-    reach: 18900,
-    likes: 1500,
-    shares: 420,
-    comments: 230,
-    date: '2024-01-13'
-  }
-];
-
-const AnalyticsPage = () =>  {
+const AnalyticsPage = () => {
+  const [data, setData] = useState([]);
   const [selectedPost, setSelectedPost] = useState(null);
-  const [dateRange] = useState({ start: '2024-01-01', end: '2024-03-31' });
+  const [username, setUsername] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = () => {
+      setIsLoading(true);
+      try {
+        const storedData = localStorage.getItem('instagramData');
+        const storedUsername = localStorage.getItem('username');
+        
+        if (storedData && storedUsername) {
+          setData(JSON.parse(storedData));
+          setUsername(storedUsername);
+        }
+      } catch (error) {
+        console.error('Error loading data:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // Safe calculation functions with null checks
+  const calculateTotalLikes = () => {
+    return data?.reduce((sum, post) => sum + (post?.like_count || 0), 0) || 0;
+  };
+
+  const calculateTotalComments = () => {
+    return data?.reduce((sum, post) => sum + (post?.comment_count || 0), 0) || 0;
+  };
+
+  const getPostTypes = () => {
+    const types = data?.reduce((acc, post) => {
+      if (post?.media_type) {
+        acc[post.media_type] = (acc[post.media_type] || 0) + 1;
+      }
+      return acc;
+    }, {}) || {};
+    return types;
+  };
+
+  const getEngagementData = () => {
+    return {
+      labels: data.map((_, index) => `Post ${index + 1}`),
+      datasets: [
+        {
+          label: 'Likes',
+          data: data.map(post => post.like_count),
+          borderColor: 'rgb(147, 51, 234)',
+          backgroundColor: 'rgba(147, 51, 234, 0.5)',
+          tension: 0.4,
+        },
+        {
+          label: 'Comments',
+          data: data.map(post => post.comment_count),
+          borderColor: 'rgb(59, 130, 246)',
+          backgroundColor: 'rgba(59, 130, 246, 0.5)',
+          tension: 0.4,
+        }
+      ],
+    };
+  };
 
   const pieData = {
-    labels: ['Reel', 'Carousel', 'Static'],
+    labels: Object.keys(getPostTypes()),
     datasets: [{
-      data: [35, 40, 25],
+      data: Object.values(getPostTypes()),
       backgroundColor: [
-        'rgba(99, 102, 241, 0.8)',
         'rgba(147, 51, 234, 0.8)',
         'rgba(59, 130, 246, 0.8)',
+        'rgba(236, 72, 153, 0.8)',
       ],
       borderColor: [
-        'rgb(99, 102, 241)',
-        'rgb(147, 51, 234)',
-        'rgb(59, 130, 246)',
+        'rgba(147, 51, 234, 1)',
+        'rgba(59, 130, 246, 1)',
+        'rgba(236, 72, 153, 1)',
       ],
       borderWidth: 1,
     }],
-  };
-
-  const lineData = {
-    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-    datasets: [
-      {
-        label: 'Engagement Rate',
-        data: [65, 59, 80, 81, 56, 90],
-        borderColor: 'rgb(99, 102, 241)',
-        backgroundColor: 'rgba(99, 102, 241, 0.5)',
-        tension: 0.4,
-      },
-      {
-        label: 'Follower Growth',
-        data: [28, 48, 40, 59, 86, 77],
-        borderColor: 'rgb(147, 51, 234)',
-        backgroundColor: 'rgba(147, 51, 234, 0.5)',
-        tension: 0.4,
-      },
-    ],
-  };
-
-  const performanceData = {
-    labels: Array.from({ length: 30 }, (_, i) => `Day ${i + 1}`),
-    datasets: [
-      {
-        label: 'Reel',
-        data: Array.from({ length: 30 }, () => Math.floor(Math.random() * 4000) + 1000),
-        borderColor: 'rgb(99, 102, 241)',
-        backgroundColor: 'rgba(99, 102, 241, 0.5)',
-        tension: 0.4,
-      },
-      {
-        label: 'Carousel',
-        data: Array.from({ length: 30 }, () => Math.floor(Math.random() * 1000) + 500),
-        borderColor: 'rgb(147, 51, 234)',
-        backgroundColor: 'rgba(147, 51, 234, 0.5)',
-        tension: 0.4,
-      },
-      {
-        label: 'Static',
-        data: Array.from({ length: 30 }, () => Math.floor(Math.random() * 800) + 200),
-        borderColor: 'rgb(59, 130, 246)',
-        backgroundColor: 'rgba(59, 130, 246, 0.5)',
-        tension: 0.4,
-      },
-    ],
-  };
-
-  const barData = {
-    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-    datasets: [
-      {
-        label: 'Post Performance',
-        data: [12, 19, 3, 5, 2, 3, 9],
-        backgroundColor: 'rgba(99, 102, 241, 0.8)',
-        borderColor: 'rgba(99, 102, 241, 1)',
-        borderWidth: 1,
-      },
-    ],
   };
 
   const options = {
@@ -173,136 +132,189 @@ const AnalyticsPage = () =>  {
     },
   };
 
-  const pieOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        position: 'right',
-        labels: {
-          color: 'white',
-        },
-      },
-    },
-  };
 
-  const engagementMetrics = [
-    {
-      title: 'Total Likes',
-      value: '206,084',
-      change: { value: '12%', trend: 'up' },
-      color: 'text-blue-400'
-    },
-    {
-      title: 'Total Shares',
-      value: '41,417',
-      change: { value: '8.5%', trend: 'up' },
-      color: 'text-purple-400'
-    },
-    {
-      title: 'Total Comments',
-      value: '24,770',
-      change: { value: '5.2%', trend: 'up' },
-      color: 'text-indigo-400'
-    }
-  ];
 
-  const postTypeMetrics = [
-    {
-      title: 'Reel',
-      value: '62.8%',
-      change: { value: '5.2%', trend: 'up' },
-      color: 'text-blue-400'
-    },
-    {
-      title: 'Carousel',
-      value: '45.7%',
-      change: { value: '3.1%', trend: 'up' },
-      color: 'text-purple-400'
-    },
-    {
-      title: 'Static',
-      value: '29.5%',
-      change: { value: '2.1%', trend: 'down' },
-      color: 'text-indigo-400'
-    }
-  ];
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-slate-950 via-blue-950 to-violet-950 flex items-center justify-center">
+        <div className="loading loading-spinner loading-lg text-primary"></div>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-950 via-blue-950 to-violet-950">
+    <div className="min-h-screen bg-gradient-to-b from-slate-950 via-blue-950 to-violet-950 text-white">
       <div className="container mx-auto px-4 py-8">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-violet-400">
-            Analytics Dashboard
-          </h1>
-          {/* <div className="flex items-center gap-4">
-            <div className="flex items-center bg-base-200 rounded-lg p-2">
-              <Calendar className="w-5 h-5 text-white mr-2" />
-              <span className="text-white">
-                {dateRange.start} to {dateRange.end}
-              </span>
+        <h1 className="text-4xl font-bold text-primary mb-8 animate-fade-in">
+          Analytics for @{username}
+        </h1>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <div className="stats bg-base-200 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+            <div className="stat">
+              <div className="stat-title">Total Likes</div>
+              <div className="stat-value text-primary">
+                {calculateTotalLikes().toLocaleString()}
+              </div>
+              <div className="stat-desc text-success">↗︎ Last 30 days</div>
             </div>
-            <button className="btn btn-ghost btn-circle">
-              <RefreshCcw className="w-5 h-5 text-white" />
-            </button>
-            <button className="btn btn-ghost btn-circle">
-              <Download className="w-5 h-5 text-white" />
-            </button>
-          </div> */}
+          </div>
+          
+          <div className="stats bg-base-200 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+            <div className="stat">
+              <div className="stat-title">Total Comments</div>
+              <div className="stat-value text-secondary">
+                {calculateTotalComments().toLocaleString()}
+              </div>
+              <div className="stat-desc text-success">↗︎ Last 30 days</div>
+            </div>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-          {engagementMetrics.map((metric, index) => (
-            <MetricCard key={index} {...metric} />
-          ))}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          <div className="card bg-base-200 shadow-xl hover:shadow-2xl transition-all duration-300">
+            <div className="card-body">
+              <h2 className="card-title">Post Distribution</h2>
+              <div className="h-[300px]">
+                <Pie data={pieData} options={options} />
+              </div>
+            </div>
+          </div>
+
+          <div className="card bg-base-200 shadow-xl hover:shadow-2xl transition-all duration-300">
+            <div className="card-body">
+              <h2 className="card-title">Engagement Over Time</h2>
+              <div className="h-[300px]">
+                <Line data={getEngagementData()} options={options} />
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-          <ChartCard title="Post Distribution">
-            <div className="h-[300px]">
-              <Pie data={pieData} options={pieOptions} />
+        <div className="card bg-base-200 shadow-xl">
+          <div className="card-body">
+            <h2 className="card-title mb-4">Recent Posts</h2>
+            <div className="overflow-x-auto">
+              <table className="table w-full">
+                <thead>
+                  <tr>
+                    <th>Type</th>
+                    <th>Likes</th>
+                    <th>Comments</th>
+                    <th>Posted At</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.map((post) => (
+                    <tr 
+                      key={post.code}
+                      onClick={() => setSelectedPost(post)}
+                      className="hover:bg-base-300 cursor-pointer transition-colors duration-300"
+                    >
+                      <td className="capitalize">{post.media_type}</td>
+                      <td>{post.like_count?.toLocaleString()}</td>
+                      <td>{post.comment_count?.toLocaleString()}</td>
+                      <td>{new Date(post.taken_at).toLocaleDateString()}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
-          </ChartCard>
-
-          <ChartCard title="Engagement Summary">
-            <div className="grid grid-cols-1 gap-4">
-              {postTypeMetrics.map((metric, index) => (
-                <div key={index} className="flex justify-between items-center p-2 rounded bg-base-300/50">
-                  <span className="text-white">{metric.title}</span>
-                  <div className="flex items-center gap-2">
-                    <span className={metric.color}>{metric.value}</span>
-                    <span className={`text-sm ${metric.change.trend === 'up' ? 'text-success' : 'text-error'}`}>
-                      {metric.change.trend === 'up' ? '↑' : '↓'} {metric.change.value}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </ChartCard>
-        </div>
-
-        <div className="grid grid-cols-1 gap-6 mb-6">
-          <ChartCard title="Post Performance Over Time">
-            <div className="h-[400px]">
-              <Line data={performanceData} options={options} />
-            </div>
-          </ChartCard>
-        </div>
-
-        <div className="grid grid-cols-1 gap-6">
-          <ChartCard title="Recent Posts">
-            <PostAnalyticsTable 
-              posts={samplePosts} 
-              onRowClick={(post) => setSelectedPost(post)} 
-            />
-          </ChartCard>
+          </div>
         </div>
       </div>
 
-      <PostDetailModal 
-        post={selectedPost} 
-        onClose={() => setSelectedPost(null)} 
-      />
+      {/* Post Details Modal */}
+      {selectedPost && (
+        <div className="modal modal-open">
+          <div className="modal-box bg-base-200 w-11/12 max-w-5xl">
+            <h3 className="text-2xl font-bold mb-6">
+              {selectedPost.media_type.charAt(0).toUpperCase() + selectedPost.media_type.slice(1)} - {new Date(selectedPost.taken_at).toLocaleDateString()}
+            </h3>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+              <div className="stat bg-base-300">
+                <div className="stat-title">Likes</div>
+                <div className="stat-value text-[#8B5CF6] text-4xl">
+                  {selectedPost.like_count?.toLocaleString()}
+                </div>
+              </div>
+              <div className="stat bg-base-300">
+                <div className="stat-title">Comments</div>
+                <div className="stat-value text-[#EC4899] text-4xl">
+                  {selectedPost.comment_count?.toLocaleString()}
+                </div>
+              </div>
+              <div className="stat bg-base-300">
+                <div className="stat-title">Type</div>
+                <div className="stat-value text-[#2DD4BF] text-4xl capitalize">
+                  {selectedPost.media_type}
+                </div>
+              </div>
+            </div>
+
+            <div className="card bg-base-300 p-4 mb-6">
+              <h4 className="font-semibold mb-4">Performance Over Time</h4>
+              <div className="h-[300px]">
+                <Line 
+                  data={{
+                    labels: ['Day 1', 'Day 3', 'Day 7', 'Day 14', 'Day 30'],
+                    datasets: [
+                      {
+                        label: 'Engagement',
+                        data: [
+                          selectedPost.like_count * 0.4,
+                          selectedPost.like_count * 0.7,
+                          selectedPost.like_count,
+                          selectedPost.like_count * 0.8,
+                          selectedPost.like_count * 0.6,
+                        ],
+                        borderColor: '#8B5CF6',
+                        backgroundColor: 'rgba(139, 92, 246, 0.2)',
+                        tension: 0.4,
+                        fill: true,
+                      }
+                    ]
+                  }}
+                  options={{
+                    ...options,
+                    plugins: {
+                      ...options.plugins,
+                      title: {
+                        display: true,
+                        text: 'Post Engagement Trend',
+                        color: 'white',
+                        font: {
+                          size: 16
+                        }
+                      }
+                    }
+                  }}
+                />
+              </div>
+            </div>
+
+            <div className="modal-action">
+              <button 
+                className="btn btn-primary"
+                onClick={() => setSelectedPost(null)}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <style >{`
+        @keyframes fade-in {
+          from { opacity: 0; transform: translateY(-10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+          animation: fade-in 0.5s ease-out;
+        }
+      `}</style>
     </div>
   );
 }

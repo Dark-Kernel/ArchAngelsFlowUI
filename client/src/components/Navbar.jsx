@@ -59,15 +59,16 @@ const Navbar = ({ onNavigate = () => {} }) => {
             </button>
           </li>
           <li>
-            <button onClick={() => onNavigate('/about')} className="hover:bg-indigo-700 transition-colors">
-              About
-            </button>
-          </li>
-          <li>
             <button onClick={() => onNavigate('/chat')} className="hover:bg-indigo-700 transition-colors">
               Chat
             </button>
           </li>
+          <li>
+            <button onClick={() => onNavigate('/about')} className="hover:bg-indigo-700 transition-colors">
+              About
+            </button>
+          </li>
+         
           <li>
           </li>
         </ul>
