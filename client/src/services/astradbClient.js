@@ -27,8 +27,8 @@ export const processAndStoreData = async () => {
         },
         body: JSON.stringify({
           data: astraCommand,
-          token: 'AstraCS:BiqicRjjJnuozbugGSXCEvte:c9c47770737cf6d5eaccba38b21874699c164c3bebc28ab32af6730afcb26ec4',
-          endpoint: 'https://b0db8dba-e3e3-4574-86ea-a91003cb8cc4-us-east-2.apps.astra.datastax.com/api/json/v1/default_keyspace/nauf'
+          token: import.meta.env.VITE_LANGFLOW_TOKEN,
+          endpoint: import.meta.env.VITE_ASTRADB_ENDPOINT
         })
       });
 
