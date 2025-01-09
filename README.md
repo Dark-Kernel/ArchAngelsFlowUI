@@ -2,7 +2,6 @@
 
 Unlock the power of your social media data with our advanced analytics platform! Designed to provide actionable insights, our platform uses cutting-edge tools to analyze engagement metrics and offer personalized content strategies tailored to your audience's behavior.  
 
-
 ---
 
 ## 🎯 **Key Highlights**  
@@ -47,11 +46,13 @@ Ask questions and get instant recommendations powered by NVIDIA’s `nv-embed-QA
 - Identify audience behavior during special events like New Year, Christmas, and more.  
 - Tailor your campaigns for higher engagement.  
 
-### **4. About Us & Home Page**  
+### **4. Instagram Username Insights**  
+- Input your Instagram username to get detailed analytics and personalized insights about your account's performance.  
+
+### **5. About Us & Home Page**  
 - User-friendly design for seamless navigation and information.  
 
 ---
-
 
 ## 📊 **Insights & Recommendations**  
 
@@ -61,8 +62,6 @@ Ask questions and get instant recommendations powered by NVIDIA’s `nv-embed-QA
 4. **Static Posts**: Use for high-quality visuals on weekdays for steady performance.  
 
 ---
-
-
 
 ## 📜 **License**  
 
