@@ -43,9 +43,7 @@ const HomePage = () => {
       
       localStorage.setItem('instagramData', JSON.stringify(data));
       localStorage.setItem('username', username);
-      
-      const result = await processAndStoreData();
-      console.log('Storage result:', result);
+    
       
       navigate('/analytics');
     } catch (error) {
