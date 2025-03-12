@@ -38,7 +38,9 @@ const HomePage = () => {
   
     setIsLoading(true);
     try {
-      const response = await fetch(`https://instagramscraper.fly.dev/getdata?username=${username}`);
+      // const response = await fetch(`https://instagramscraper.fly.dev/getdata?username=${username}`);
+      const response = await fetch(`/api/getdata?username=${username}`);
+      console.log("REPP",response)
       const data = await response.json();
       
       localStorage.setItem('instagramData', JSON.stringify(data));
