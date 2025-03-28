@@ -58,7 +58,8 @@ const ChatPage = () => {
         };
 
         const langflowClient = new LangflowClient(
-            'https://arch-angels-iserver.vercel.app/api/langflow',
+            // 'https://arch-angels-iserver.vercel.app/api/langflow',
+            'http://localhost:3001/api/langflow',
             applicationToken
         );
 

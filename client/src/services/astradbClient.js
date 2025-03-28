@@ -20,7 +20,19 @@ export const processAndStoreData = async () => {
         }
       };
 
-      const response = await fetch('https://arch-angels-iserver.vercel.app/api/astra', {
+      // const response = await fetch('https://arch-angels-iserver.vercel.app/api/astra', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json'
+      //   },
+      //   body: JSON.stringify({
+      //     data: astraCommand,
+      //     token: import.meta.env.VITE_LANGFLOW_TOKEN,
+      //     endpoint: import.meta.env.VITE_ASTRADB_ENDPOINT
+      //   })
+      // });
+
+      const response = await fetch('http://localhost:3001/api/astra', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -31,6 +43,7 @@ export const processAndStoreData = async () => {
           endpoint: import.meta.env.VITE_ASTRADB_ENDPOINT
         })
       });
+
 
       if (!response.ok) {
         const errorData = await response.json();
