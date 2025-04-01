@@ -39,12 +39,22 @@ const HomePage = () => {
     setIsLoading(true);
     try {
       // const response = await fetch(`https://instagramscraper.fly.dev/getdata?username=${username}`);
-      const response = await fetch(`/api/getdata?username=${username}`);
+      // const response = await fetch(`/api/getdata?username=${username}`);
+      const response = await fetch(`http://localhost:5000/getdata?username=${username}`);
       console.log("REPP",response)
       const data = await response.json();
       
       localStorage.setItem('instagramData', JSON.stringify(data));
       localStorage.setItem('username', username);
+
+       const dataToSend = await fetch("http://localhost:5001/api/vectorize", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    });
+    
     
       
       navigate('/analytics');

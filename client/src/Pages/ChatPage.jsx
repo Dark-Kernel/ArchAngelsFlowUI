@@ -30,7 +30,7 @@ const ChatPage = () => {
         let interval;
         if (isLoading) {
             interval = setInterval(() => {
-                setCurrentLoadingMessage((prev) => 
+                setCurrentLoadingMessage((prev) =>
                     prev === loadingMessages.length - 1 ? 0 : prev + 1
                 );
             }, 5000); // Change message every 2 seconds
@@ -42,7 +42,7 @@ const ChatPage = () => {
         const flowIdOrName = import.meta.env.VITE_FLOWIDORNAME;
         const langflowId = import.meta.env.VITE_LANGFLOWID;
         const applicationToken = import.meta.env.VITE_LANGFLOW_TOKEN;
-        
+
         const tweaks = {
             "ChatInput-7Sd79": {},
             "ParseData-28GbZ": {},
@@ -65,42 +65,95 @@ const ChatPage = () => {
 
         setIsLoading(true);
         setError(null);
-        
+
         try {
             // Simulate different loading states
             setLoadingState('collecting');
             await new Promise(resolve => setTimeout(resolve, 2000));
-            
+
             setLoadingState('analyzing');
             await new Promise(resolve => setTimeout(resolve, 2000));
-            
+
             setLoadingState('processing');
             await new Promise(resolve => setTimeout(resolve, 2000));
-            
-            setLoadingState('generating');
-            
-            const response = await langflowClient.runFlow(
-                flowIdOrName,
-                langflowId,
-                inputValue,
-                'chat',
-                'chat',
-                tweaks,
-                false,
-                (data) => console.log('Update:', data),
-                (message) => console.log('Stream Closed:', message),
-                (error) => {
-                    console.error('Stream Error:', error);
-                    setError('Stream error occurred');
-                }
-            );
 
-            if (response && response.outputs && response.outputs[0]) {
-                const messageText = response.outputs[0].outputs[0].messages[0].message;
-                setOutputValue(messageText);
-            } else {
-                setError('No output received from the server');
+            setLoadingState('generating');
+
+            // const response = await langflowClient.runFlow(
+            //     flowIdOrName,
+            //     langflowId,
+            //     inputValue,
+            //     'chat',
+            //     'chat',
+            //     tweaks,
+            //     false,
+            //     (data) => console.log('Update:', data),
+            //     (message) => console.log('Stream Closed:', message),
+            //     (error) => {
+            //         console.error('Stream Error:', error);
+            //         setError('Stream error occurred');
+            //     }
+            // );
+            // const context = await fetch("http://localhost:5000/api/get_context?question=" + inputValue).then(res => res.json());
+
+            // let promptt = context + inputValue;
+            // const response = await fetch('http://155.248.250.55:11434/api/generate', {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json'
+            //     },
+            //     body: JSON.stringify({
+            //         model: 'archInsight',
+            //         prompt: promptt,
+            //         stream: true
+            //     })
+            // });
+            const response = await fetch('http://localhost:5001/api?question=' + inputValue + '&insight_mode=true', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+
+            if (!response.body) {
+                throw new Error('No response body received');
             }
+            
+            const resp_data = await response.json();  // Parse JSON once
+
+            // const reader = response.body.getReader();
+            // const decoder = new TextDecoder();
+            // let outputText = '';
+
+            // while (true) {
+            //     const { value, done } = await reader.read();
+            //     if (done) break;
+
+            //     const chunk = decoder.decode(value, { stream: true });
+
+            //     try {
+            //         const jsonObjects = chunk.trim().split('\n').map(line => JSON.parse(line));
+            //         jsonObjects.forEach(obj => {
+            //             if (obj.response) {
+            //                 outputText += obj.response;
+            //                 setOutputValue(prev => prev + obj.response);
+            //             }
+            //             console.log(outputText);
+            //         });
+            //     } catch (e) {
+            //         console.error('Error parsing JSONNN:', e, 'Chunk:', chunk);
+            //     }
+            // }
+            setOutputValue(resp_data);
+            console.log("RESP BODY", typeof resp_data);
+
+
+            // if (response && response.outputs && response.outputs[0]) {
+            //     const messageText = response.outputs[0].outputs[0].messages[0].message;
+            //     setOutputValue(messageText);
+            // } else {
+            //     setError('No output received from the server');
+            // }
         } catch (error) {
             console.error('Error running flow:', error);
             setError(error.message || 'An error occurred while processing your request');
@@ -113,9 +166,9 @@ const ChatPage = () => {
     return (
         <div className="min-h-screen bg-gradient-to-b from-slate-950 via-blue-950 to-violet-950 py-8 relative overflow-hidden">
             {/* Enhanced Grid Pattern with Parallax Effect */}
-            <div 
+            <div
                 className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:4rem_4rem]"
-                style={{ 
+                style={{
                     maskImage: 'linear-gradient(to bottom, transparent, black 10%, black 90%, transparent)',
                     transform: 'translateZ(0)',
                 }}
@@ -176,11 +229,10 @@ const ChatPage = () => {
                         {/* Enhanced Button */}
                         <div>
                             <button
-                                className={`group w-full py-3 rounded-xl text-white text-lg font-medium shadow-lg transition-all duration-300 relative overflow-hidden ${
-                                    isLoading
+                                className={`group w-full py-3 rounded-xl text-white text-lg font-medium shadow-lg transition-all duration-300 relative overflow-hidden ${isLoading
                                         ? 'bg-slate-700/50 cursor-not-allowed'
                                         : 'bg-gradient-to-r from-blue-600/80 to-violet-600/80 hover:from-blue-500/80 hover:to-violet-500/80 border border-white/10 hover:border-white/20'
-                                }`}
+                                    }`}
                                 onClick={runLangflow}
                                 disabled={isLoading || !inputValue.trim()}
                             >
