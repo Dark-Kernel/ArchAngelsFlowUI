@@ -40,7 +40,7 @@ const HomePage = () => {
     try {
       // const response = await fetch(`https://instagramscraper.fly.dev/getdata?username=${username}`);
       // const response = await fetch(`/api/getdata?username=${username}`);
-      const response = await fetch(`http://localhost:5000/getdata?username=${username}`);
+      const response = await fetch(`http://localhost:5002/getdata?username=${username}`);
       console.log("REPP",response)
       const data = await response.json();
       

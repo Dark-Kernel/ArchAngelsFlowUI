@@ -36,104 +36,89 @@ const ErrorMessage = ({ message, type = 'error' }) => {
 };
 
 export const AnalysisVisualizer = ({ analysisText }) => {
-
-  // // Parse the analysis text
-  // const summaryMatch = analysisText.match(/---SUMMARY---([\s\S]*?)---VISUALIZATION_DATA---/);
-  // const summary = summaryMatch ? summaryMatch[1].trim() : '';
-
-  // const jsonMatch = analysisText.match(/---VISUALIZATION_DATA---([\s\S]*)/);
-  // let jsonString = jsonMatch ? jsonMatch[1].trim() : '';
-
-  // // Attempt to find and extract only the JSON part
-  // const jsonStartIndex = jsonString.indexOf('{');
-  // const jsonEndIndex = jsonString.lastIndexOf('}');
-  // if (jsonStartIndex !== -1 && jsonEndIndex !== -1) {
-  //   jsonString = jsonString.slice(jsonStartIndex, jsonEndIndex + 1);
-  // }
-
-  // let data = null;
-console.log("ANATEXT: ", typeof analysisText)
   let parseError = null;
+  let data = analysisText;
 
-      // if (!analysisText || typeof analysisText !== "object") {
-    // return <ErrorMessage message="Invalid or missing analysis data." />;
-  // }
-    let data = analysisText; // No need to parse
-  // try {
-  //   data = JSON.parse(analysisText);
-  // } catch (error) {
-  //   console.error('Failed to parse JSON:', error);
-  //   parseError = 'Failed to parse the analysis data. Please try again.';
-  // }
+  // Handle string input if that's what's being passed
+  if (typeof analysisText === 'string') {
+    try {
+      data = JSON.parse(analysisText);
+    } catch (error) {
+      console.error('Failed to parse JSON:', error);
+      parseError = 'Failed to parse the analysis data. Please try again.';
+    }
+  }
 
   if (!data) {
     return <ErrorMessage message={parseError || 'No data available'} />;
   }
 
-  // if (!data['Post type distribution'] || !data['Weekly engagement rates (last month)'] || 
-  //     !data['Top performing post types'] || !data['Monthly performance trends']) {
-  //   return <ErrorMessage message="The analysis data is incomplete or in an unexpected format." type="warning" />;
-  // }
-    
-   const summary = data.summary || 'No summary available';
+  const summary = data.summary || 'No summary available';
   const visualizationData = data.visualization_data || {};
 
+  // Safely extract post type distribution data
+  const postTypeData = visualizationData.post_type_distribution || {};
   const pieData = {
-    labels: ['Reels', 'Carousel Posts', 'Static Posts'],
+    labels: ['Carousel Posts', 'Reel Posts', 'Static Posts'],
     datasets: [{
       data: [
-        visualizationData.post_type_distribution?.carousel || 0,
-        visualizationData.post_type_distribution?.reel || 0,
-        visualizationData.post_type_distribution?.static || 0
+        postTypeData.carousel || 0,
+        postTypeData.reel || 0,
+        postTypeData.static || 0
       ],
       backgroundColor: [
-        'rgba(99, 102, 241, 0.8)',
         'rgba(147, 51, 234, 0.8)',
+        'rgba(99, 102, 241, 0.8)',
         'rgba(59, 130, 246, 0.8)',
       ],
       borderColor: [
-        'rgb(99, 102, 241)',
         'rgb(147, 51, 234)',
+        'rgb(99, 102, 241)',
         'rgb(59, 130, 246)',
       ],
       borderWidth: 1,
     }],
   };
 
+  // Safely extract weekly engagement data
+  const weeklyEngagementData = visualizationData.weekly_engagement_trend || [];
   const performanceData = {
-    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+    labels: weeklyEngagementData.map(item => item.week || ''),
     datasets: [
       {
-        label: 'Engagement Rate',
-        data: visualizationData.weekly_engagement_trend,
+        label: 'Likes',
+        data: weeklyEngagementData.map(item => item.total_likes || 0),
         borderColor: 'rgb(99, 102, 241)',
         backgroundColor: 'rgba(99, 102, 241, 0.5)',
+        tension: 0.4,
+      },
+      {
+        label: 'Comments',
+        data: weeklyEngagementData.map(item => item.total_comments || 0),
+        borderColor: 'rgb(236, 72, 153)',
+        backgroundColor: 'rgba(236, 72, 153, 0.5)',
         tension: 0.4,
       }
     ],
   };
 
+  // Safely extract monthly trend data
+  const monthlyTrendData = visualizationData.monthly_performance_trend || [];
   const monthlyTrendsData = {
-    labels: visualizationData.monthly_performance_trend,
+    labels: monthlyTrendData.map(item => item.month || ''),
     datasets: [
       {
-        label: 'Reels',
-        data: visualizationData.monthly_performance_trend.map(item => item.Reels),
+        label: 'Likes',
+        data: monthlyTrendData.map(item => item.total_likes || 0),
         borderColor: 'rgb(99, 102, 241)',
         backgroundColor: 'rgba(99, 102, 241, 0.5)',
       },
       {
-        label: 'Carousel',
-        data: visualizationData.monthly_performance_trend.map(item => item.Carousel),
-        borderColor: 'rgb(147, 51, 234)',
-        backgroundColor: 'rgba(147, 51, 234, 0.5)',
-      },
-      {
-        label: 'Static',
-        data: visualizationData.monthly_performance_trend.map(item => item.Static),
-        borderColor: 'rgb(59, 130, 246)',
-        backgroundColor: 'rgba(59, 130, 246, 0.5)',
-      },
+        label: 'Comments',
+        data: monthlyTrendData.map(item => item.total_comments || 0),
+        borderColor: 'rgb(236, 72, 153)',
+        backgroundColor: 'rgba(236, 72, 153, 0.5)',
+      }
     ],
   };
 
@@ -164,6 +149,9 @@ console.log("ANATEXT: ", typeof analysisText)
     ...options,
     aspectRatio: 1,
   };
+
+  // Safely extract top performing content
+  const topPerformingContent = visualizationData.top_performing_content || [];
 
   return (
     <div className="space-y-6">
@@ -201,15 +189,18 @@ console.log("ANATEXT: ", typeof analysisText)
       <div className="bg-slate-800/50 rounded-xl p-6 border border-white/10">
         <h3 className="text-lg font-semibold text-white/90 mb-4">Top Performing Post Types</h3>
         <div className="space-y-2">
-          {visualizationData.top_performing_content.map(([type, rate], index) => (
-            <div key={index} className="flex justify-between items-center">
-              <span className="text-white/80">{type}</span>
-              <span className="text-white/80">{rate}% Engagement Rate</span>
-            </div>
-          ))}
+          {Array.isArray(topPerformingContent) ? (
+            topPerformingContent.map((item, index) => (
+              <div key={index} className="flex justify-between items-center">
+                <span className="text-white/80">{item.post_type} ({item.source})</span>
+                <span className="text-white/80">{item.likes} Likes, {item.comments} Comments</span>
+              </div>
+            ))
+          ) : (
+            <p className="text-white/80">No data available</p>
+          )}
         </div>
       </div>
     </div>
   );
 };
-

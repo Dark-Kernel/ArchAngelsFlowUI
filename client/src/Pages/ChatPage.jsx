@@ -108,7 +108,18 @@ const ChatPage = () => {
             //         stream: true
             //     })
             // });
-            const response = await fetch('http://localhost:5001/api?question=' + inputValue + '&insight_mode=true', {
+
+
+            ////////////////////// ATCUAL
+            // const response = await fetch('http://localhost:5001/api?question=' + inputValue + '&insight_mode=true', {
+            //     method: 'GET',
+            //     headers: {
+            //         'Content-Type': 'application/json'
+            //     }
+            // })
+
+            const response = await fetch('http://localhost:5001/sample', {
+                
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
