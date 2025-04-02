@@ -37,6 +37,10 @@ const Footer = ({ onNavigate = () => {} }) => {
           <Info className="h-4 w-4" />
           About us
         </button>
+        <button onClick={() => onNavigate('/template')} className="link link-hover flex items-center gap-2 hover:text-indigo-300 transition-colors">
+          <FileText className="h-4 w-4" />
+          Template
+        </button>
         <button onClick={() => onNavigate('/contact')} className="link link-hover flex items-center gap-2 hover:text-indigo-300 transition-colors">
           <Mail className="h-4 w-4" />
           Contact

@@ -1,0 +1,162 @@
+{
+  "datasetOverview": {
+    "totalPosts": 10,
+    "mediaTypes": {
+      "carousel": 4,
+      "reel": 4,
+      "static": 2
+    }
+  },
+  "engagementStatistics": [
+    {
+      "mediaType": "carousel",
+      "engagement": 113.50,
+      "likeCount": 101.00,
+      "commentCount": 12.5
+    },
+    {
+      "mediaType": "reel",
+      "engagement": 97.25,
+      "likeCount": 88.25,
+      "commentCount": 9.0
+    },
+    {
+      "mediaType": "static",
+      "engagement": 58.50,
+      "likeCount": 55.50,
+      "commentCount": 3.0
+    }
+  ],
+  "clusterAnalysis": [
+    {
+      "cluster": 0,
+      "engagement": 81.0,
+      "likeCount": 75.857143,
+      "hashtags": 1.714286,
+      "mediaTypes": {
+        "carousel": 3,
+        "reel": 2,
+        "static": 2
+      }
+    },
+    {
+      "cluster": 1,
+      "engagement": 131.0,
+      "likeCount": 112.333333,
+      "hashtags": 13.666667,
+      "mediaTypes": {
+        "reel": 2,
+        "carousel": 1
+      }
+    }
+  ],
+  "predictionModel": {
+    "meanSquaredError": 2489.93
+  },
+  "featureImportance": [
+    {
+      "feature": "media_carousel",
+      "importance": 45.697560
+    },
+    {
+      "feature": "media_static",
+      "importance": 44.738463
+    },
+    {
+      "feature": "emoji_count",
+      "importance": 12.036502
+    },
+    {
+      "feature": "hashtag_count",
+      "importance": 1.474057
+    },
+    {
+      "feature": "media_reel",
+      "importance": 0.959097
+    },
+    {
+      "feature": "caption_length",
+      "importance": 0.209560
+    }
+  ],
+  "topKeywords": [
+    {"word": "api", "count": 8},
+    {"word": "postman", "count": 7},
+    {"word": "this", "count": 6},
+    {"word": "session", "count": 5},
+    {"word": "hackathon", "count": 5},
+    {"word": "development", "count": 4},
+    {"word": "innovation", "count": 4},
+    {"word": "your", "count": 4},
+    {"word": "just", "count": 3},
+    {"word": "tech", "count": 3}
+  ],
+  "bestTimesToPost": [
+    {
+      "dayName": "Saturday",
+      "hourOfDay": 13,
+      "engagement": 146.0
+    },
+    {
+      "dayName": "Friday",
+      "hourOfDay": 9,
+      "engagement": 142.0
+    },
+    {
+      "dayName": "Wednesday",
+      "hourOfDay": 14,
+      "engagement": 113.0
+    }
+  ],
+  "recommendations": {
+    "bestPerformingMediaType": {
+      "type": "carousel",
+      "avgEngagement": 113.50
+    },
+    "captionStrategy": "Longer captions are associated with higher engagement",
+    "hashtagStrategy": "Using more hashtags correlates with higher engagement",
+    "bestTimes": [
+      "Saturday at 13:00",
+      "Friday at 9:00",
+      "Wednesday at 14:00"
+    ],
+    "popularTopics": [
+      "api",
+      "postman",
+      "this",
+      "session",
+      "hackathon"
+    ]
+  },
+  "topPerformingPosts": [
+    {
+      "id": "C3c377Rqvh7",
+      "mediaType": "carousel",
+      "engagement": 146
+    },
+    {
+      "id": "DAanEzpuXcX",
+      "mediaType": "reel",
+      "engagement": 142
+    },
+    {
+      "id": "DBMCXzGtpPl",
+      "mediaType": "carousel",
+      "engagement": 113
+    }
+  ],
+  "visualizations": [
+    {
+      "id": "heatmap",
+      "title": "Engagement",
+      "description": "IDHAR KUCH DALNA HAIN",
+      "imageUrl": "/data/instagram_analytics.png"
+    },
+    {
+      "id": "relationship-graph",
+      "title": "Top Key Words in Captions",
+      "description": "IDHAR KUCH DALNA HAIN",
+      "imageUrl": "/data/top_keywords.png"
+    }
+  ]
+} 

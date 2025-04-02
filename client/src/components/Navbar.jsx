@@ -41,6 +41,11 @@ const Navbar = ({ onNavigate = () => {} }) => {
                 Chat
               </button>
             </li>
+            <li>
+              <button onClick={() => onNavigate('/template')} className="hover:bg-indigo-700 transition-colors">
+                Template
+              </button>
+            </li>
           </ul>
         </div>
       </div>
@@ -66,6 +71,11 @@ const Navbar = ({ onNavigate = () => {} }) => {
           <li>
             <button onClick={() => onNavigate('/about')} className="hover:bg-indigo-700 transition-colors">
               About
+            </button>
+          </li>
+          <li>
+            <button onClick={() => onNavigate('/template')} className="hover:bg-indigo-700 transition-colors">
+              Template
             </button>
           </li>
          

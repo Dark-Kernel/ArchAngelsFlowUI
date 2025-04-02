@@ -7,6 +7,7 @@ import HomePage from './Pages/HomePage'
 import AboutPage from './Pages/AboutPage'
 import ChatPage from './Pages/ChatPage'
 import AnalyticsPage from './Pages/AnalyticsPage'
+import TemplatePage from './Pages/TemplatePage'
 
 function AppContent() {
   const navigate = useNavigate();
@@ -24,6 +25,7 @@ function AppContent() {
           <Route path="/about" element={<AboutPage onNavigate={handleNavigation} />} />
           <Route path="/chat" element={<ChatPage />} />
           <Route path="/analytics" element={<AnalyticsPage />} />
+          <Route path="/template" element={<TemplatePage onNavigate={handleNavigation} />} />
         </Routes>
       </main>
       <Footer onNavigate={handleNavigation} />
