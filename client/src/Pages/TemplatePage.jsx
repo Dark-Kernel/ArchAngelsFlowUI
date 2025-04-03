@@ -49,6 +49,7 @@ const TemplatePage = ({ onNavigate = () => {} }) => {
     const fetchData = async () => {
       try {
         const storedData = localStorage.getItem("instagramData");
+        // console.log(storedData)
         if (!storedData) {
           throw new Error("No data found in localStorage");
         }
@@ -63,8 +64,10 @@ const TemplatePage = ({ onNavigate = () => {} }) => {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const jsonData = await response.json();
+        // console.log(jsonData)
         // const jsonData = JSON.parse(storedData);
         setData(jsonData);
+        console.log(data)
         setLoading(false);
       } catch (err) {
         console.error("Error fetching data:", err);
