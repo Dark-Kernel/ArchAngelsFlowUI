@@ -31,11 +31,11 @@ const Navbar = ({ onNavigate = () => {} }) => {
                 Analytics
               </button>
             </li>
-            <li>
+            {/* <li>
               <button onClick={() => onNavigate('/about')} className="hover:bg-indigo-700 transition-colors">
                 About
               </button>
-            </li>
+            </li> */}
             <li>
               <button onClick={() => onNavigate('/chat')} className="hover:bg-indigo-700 transition-colors">
                 Chat
@@ -68,11 +68,11 @@ const Navbar = ({ onNavigate = () => {} }) => {
               Chat
             </button>
           </li>
-          <li>
+          {/* <li>
             <button onClick={() => onNavigate('/about')} className="hover:bg-indigo-700 transition-colors">
               About
             </button>
-          </li>
+          </li> */}
           <li>
             <button onClick={() => onNavigate('/template')} className="hover:bg-indigo-700 transition-colors">
               Template

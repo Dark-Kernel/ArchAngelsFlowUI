@@ -33,10 +33,10 @@ const Footer = ({ onNavigate = () => {} }) => {
           <Home className="h-4 w-4" />
           Home
         </button>
-        <button onClick={() => onNavigate('/about')} className="link link-hover flex items-center gap-2 hover:text-indigo-300 transition-colors">
+        {/* <button onClick={() => onNavigate('/about')} className="link link-hover flex items-center gap-2 hover:text-indigo-300 transition-colors">
           <Info className="h-4 w-4" />
           About us
-        </button>
+        </button> */}
         <button onClick={() => onNavigate('/template')} className="link link-hover flex items-center gap-2 hover:text-indigo-300 transition-colors">
           <FileText className="h-4 w-4" />
           Template

@@ -22,7 +22,7 @@ function AppContent() {
       <main className="flex-grow">
         <Routes>
           <Route path="/" element={<HomePage onNavigate={handleNavigation} />} />
-          <Route path="/about" element={<AboutPage onNavigate={handleNavigation} />} />
+          {/* <Route path="/about" element={<AboutPage onNavigate={handleNavigation} />} /> */}
           <Route path="/chat" element={<ChatPage />} />
           <Route path="/analytics" element={<AnalyticsPage />} />
           <Route path="/template" element={<TemplatePage onNavigate={handleNavigation} />} />

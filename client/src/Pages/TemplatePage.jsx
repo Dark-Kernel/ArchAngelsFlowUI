@@ -28,13 +28,41 @@ const TemplatePage = ({ onNavigate = () => {} }) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    //FETCH FROM DIRECTORY
+    // const fetchData = async () => {
+    //   try {
+    //     const response = await fetch('/data/instagramAnalytics.json');
+    //     if (!response.ok) {
+    //       throw new Error(`HTTP error! Status: ${response.status}`);
+    //     }
+    //     const jsonData = await response.json();
+    //     setLoading(false);
+    //   } catch (err) {
+    //     console.error("Error fetching data:", err);
+    //     setError(err.message);
+    //     setLoading(false);
+    //   }
+    // };
+
+    //FETCH FROM LOCAL STORAGE
     const fetchData = async () => {
       try {
-        const response = await fetch('/data/instagramAnalytics.json');
+        const storedData = localStorage.getItem("instagramData");
+        if (!storedData) {
+          throw new Error("No data found in localStorage");
+        }
+        const response = await fetch('https://instalytics-ml.fly.dev', {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(storedData),
+      });
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const jsonData = await response.json();
+        // const jsonData = JSON.parse(storedData);
         setData(jsonData);
         setLoading(false);
       } catch (err) {
@@ -42,7 +70,7 @@ const TemplatePage = ({ onNavigate = () => {} }) => {
         setError(err.message);
         setLoading(false);
       }
-    };
+    };    
 
     fetchData();
   }, []);
