@@ -118,8 +118,8 @@ const ChatPage = () => {
             //     }
             // })
 
-            const response = await fetch('http://localhost:5001/sample', {
-                
+            // const response = await fetch('http://localhost:5001/sample', {
+                const response = await fetch('https://instalytics-rag.fly.dev/api?question=' + inputValue + '&insight_mode=true', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
