@@ -23,7 +23,7 @@ import {
 } from 'lucide-react';
 
 const TemplatePage = ({ onNavigate = () => {} }) => {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -58,16 +58,16 @@ const TemplatePage = ({ onNavigate = () => {} }) => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(storedData),
+          body: storedData,
       });
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const jsonData = await response.json();
-        // console.log(jsonData)
+        console.log("JSONDATA==> ",jsonData)
         // const jsonData = JSON.parse(storedData);
         setData(jsonData);
-        console.log(data)
+        console.log("DATA==> ",data)
         setLoading(false);
       } catch (err) {
         console.error("Error fetching data:", err);
