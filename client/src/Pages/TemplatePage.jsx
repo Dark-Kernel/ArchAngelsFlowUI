@@ -36,6 +36,7 @@ const TemplatePage = ({ onNavigate = () => {} }) => {
     //       throw new Error(`HTTP error! Status: ${response.status}`);
     //     }
     //     const jsonData = await response.json();
+    //     setData(jsonData);
     //     setLoading(false);
     //   } catch (err) {
     //     console.error("Error fetching data:", err);
@@ -51,7 +52,7 @@ const TemplatePage = ({ onNavigate = () => {} }) => {
         if (!storedData) {
           throw new Error("No data found in localStorage");
         }
-        const response = await fetch('https://instalytics-ml.fly.dev', {
+        const response = await fetch('https://instalytics-ml.fly.dev/predict', {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
