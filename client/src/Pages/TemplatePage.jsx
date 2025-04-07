@@ -379,11 +379,11 @@ const TemplatePage = ({ onNavigate = () => {} }) => {
           </div>
         </div>
 
-        {/* Image Showcase Section - Full Width */}
+        {/* Image Showcase Section - Full Width 
         <div className="max-w-6xl mx-auto mt-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             
-            {/* First Image Card */}
+            {// First Image Card }
             <div className="card bg-gradient-to-br from-indigo-900/80 to-indigo-800/80 backdrop-blur-sm shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden">
               <figure className="px-6 pt-6">
                 <img 
@@ -404,7 +404,7 @@ const TemplatePage = ({ onNavigate = () => {} }) => {
               </div>
             </div>
             
-            {/* Second Image Card */}
+            {// Second Image Card }
             <div className="card bg-gradient-to-br from-indigo-900/80 to-indigo-800/80 backdrop-blur-sm shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden">
               <figure className="px-6 pt-6">
                 <img 
@@ -427,6 +427,7 @@ const TemplatePage = ({ onNavigate = () => {} }) => {
             
           </div>
         </div>
+        */ }
         
         {/* Recommendations Section - Full Width */}
         <div className="max-w-6xl mx-auto mt-8">

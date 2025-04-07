@@ -25,7 +25,7 @@ function AppContent() {
           {/* <Route path="/about" element={<AboutPage onNavigate={handleNavigation} />} /> */}
           <Route path="/chat" element={<ChatPage />} />
           <Route path="/analytics" element={<AnalyticsPage />} />
-          <Route path="/template" element={<TemplatePage onNavigate={handleNavigation} />} />
+          <Route path="/recommend" element={<TemplatePage onNavigate={handleNavigation} />} />
         </Routes>
       </main>
       <Footer onNavigate={handleNavigation} />

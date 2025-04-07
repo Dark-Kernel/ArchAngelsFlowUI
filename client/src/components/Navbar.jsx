@@ -74,8 +74,8 @@ const Navbar = ({ onNavigate = () => {} }) => {
             </button>
           </li> */}
           <li>
-            <button onClick={() => onNavigate('/template')} className="hover:bg-indigo-700 transition-colors">
-              Template
+            <button onClick={() => onNavigate('/recommend')} className="hover:bg-indigo-700 transition-colors">
+              Recommend
             </button>
           </li>
          
