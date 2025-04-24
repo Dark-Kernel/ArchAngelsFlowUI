@@ -11,14 +11,6 @@ const AboutPage = ({ onNavigate = () => {} }) => {
 
   const developers = [
     {
-      name: "Anas Khan",
-      github: "anaskhan28",
-      linkedin: "https://www.linkedin.com/in/anaskhan28/",
-      role: "Full Stack Developer",
-      description: "Focused on creating beautiful and intuitive user experiences",
-      icon: Code
-    },
-    {
       name: "Sumit Patel",
       github: "Dark-Kernel",
       linkedin: "https://www.linkedin.com/in/sumit-patel-dev/",
@@ -27,17 +19,25 @@ const AboutPage = ({ onNavigate = () => {} }) => {
       icon: Binary
     },
     {
-      name: "Naufil",
-      github: "Z-xus",
-      linkedin: "https://www.linkedin.com/in/naufil-asar/",
-      role: "AI Engineer",
-      description: "Expert in AI/ML integration and LangChain implementation",
+      name: "Yash Dhavde",
+      github: "YashD15",
+      linkedin: "https://www.linkedin.com/in/",
+      role: "Full Stack Developer",
+      description: "Focused on creating beautiful and intuitive user experiences",
+      icon: Code
+    },
+    {
+      name: "Pratik Bhuvad",
+      github: "pratik-bhuvad",
+      linkedin: "https://www.linkedin.com/in/",
+      role: "Frontend Engineer",
+      description: "Works in Frontend part and UI implementation",
       icon: Target
     },
     {
-      name: "Manjiri C",
-      github: "Codex108",
-      linkedin: "https://www.linkedin.com/in/manjiri-chavande/",
+      name: "Varad Khandare",
+      github: "varadk1120",
+      linkedin: "https://www.linkedin.com/in/",
       role: "Full Stack Developer",
       description: "Passionate about building scalable applications and AI integration",
       icon: Code

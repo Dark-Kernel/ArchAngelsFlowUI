@@ -7,11 +7,14 @@ import LoadingState from '../components/loadingState';
 const ChatPage = () => {
     const [inputValue, setInputValue] = useState('');
     const [outputValue, setOutputValue] = useState('');
+    const [aioutputValue, setaiOutputValue] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
     const [isVisible, setIsVisible] = useState(false);
     const [loadingState, setLoadingState] = useState(null);
     const [currentLoadingMessage, setCurrentLoadingMessage] = useState(0);
+    const [questionData, setQuestionData] = useState(false);
+    const [showTextArea, setShowTextArea] = useState(false);
 
     const loadingMessages = [
         "Analyzing your request...",
@@ -21,6 +24,17 @@ const ChatPage = () => {
         "Preparing your analysis...",
         "Almost there...",
     ];
+
+    const callAI = async (input) => {
+        const response = await fetch('https://gemini-api.fly.dev?query=' + input, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/text'
+            }
+        });
+        setaiOutputValue(await response.text());
+        // return response.text
+    }
 
     useEffect(() => {
         setIsVisible(true);
@@ -118,8 +132,10 @@ const ChatPage = () => {
             //     }
             // })
 
+
             // const response = await fetch('http://localhost:5001/sample', {
-                const response = await fetch('https://instalytics-rag.fly.dev/api?question=' + inputValue + '&insight_mode=true', {
+                const iinputValue = "give me insights about my data"
+                const response = await fetch('https://instalytics-rag.fly.dev/api?question=' + iinputValue + '&insight_mode=true', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -223,12 +239,10 @@ const ChatPage = () => {
 
                     <div className="p-6 space-y-6">
                         {/* Enhanced Input Section */}
-                        <div className="space-y-3">
-                            <label className="block text-lg font-medium text-white/90">
-                                Ask a Question
-                            </label>
+
+                        <div className={`space-y-3`}>
                             <textarea
-                                className="w-full p-4 bg-slate-800/50 border border-white/10 rounded-xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 text-white placeholder-white/40 resize-none transition-all duration-300 hover:border-white/20"
+                                className="w-full  p-4 bg-slate-800/50 border border-white/10 rounded-xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 text-white placeholder-white/40 resize-none transition-all duration-300 hover:border-white/20"
                                 placeholder="What's your social media question?"
                                 value={inputValue}
                                 onChange={(e) => setInputValue(e.target.value)}
@@ -237,6 +251,39 @@ const ChatPage = () => {
                             />
                         </div>
 
+                        <div>
+                            <button
+                                className={`group w-full py-3 rounded-xl text-white text-lg font-medium shadow-lg transition-all duration-300 relative overflow-hidden ${isLoading
+                                        ? 'bg-slate-700/50 cursor-not-allowed'
+                                        : 'bg-gradient-to-r from-blue-600/80 to-violet-600/80 hover:from-blue-500/80 hover:to-violet-500/80 border border-white/10 hover:border-white/20'
+                                    }`}
+                                 onClick={e=> callAI(inputValue)}
+                                disabled={isLoading || !inputValue.trim()}
+                            >
+                                {isLoading ? (
+                                    <div className="flex flex-col items-center justify-center space-y-3">
+                                        <div className="flex items-center justify-center space-x-2">
+                                            <div className="relative">
+                                                <div className="w-8 h-8 border-4 border-blue-400/30 rounded-full animate-spin border-t-blue-500"></div>
+                                                <div className="absolute top-0 left-0 w-8 h-8 border-4 border-transparent rounded-full animate-pulse border-t-violet-500 animate-[spin_3s_linear_infinite]"></div>
+                                            </div>
+                                            <span className="text-white/90 animate-pulse">
+                                                {loadingMessages[currentLoadingMessage]}
+                                            </span>
+                                        </div>
+                                        <div className="w-full bg-slate-700/30 rounded-full h-1.5">
+                                            <div className="bg-gradient-to-r from-blue-500 to-violet-500 h-1.5 rounded-full animate-[loading_2s_ease-in-out_infinite]"></div>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="flex items-center justify-center space-x-2">
+                                        <Sparkles className="w-5 h-5 group-hover:animate-spin-slow" />
+                                        <span>Ask a question?</span>
+                                    </div>
+                                )}
+                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                            </button>
+                        </div>
                         {/* Enhanced Button */}
                         <div>
                             <button
@@ -283,6 +330,12 @@ const ChatPage = () => {
                         {outputValue && (
                             <div className="animate-fadeIn">
                                 <AnalysisVisualizer analysisText={outputValue} />
+                            </div>
+                        )}
+
+                        {aioutputValue && (
+                            <div className="animate-fadeIn">
+                               <p> {aioutputValue} </p>
                             </div>
                         )}
                     </div>
