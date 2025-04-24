@@ -134,7 +134,7 @@ const ChatPage = () => {
 
 
             // const response = await fetch('http://localhost:5001/sample', {
-                const iinputValue = "give me insights about my data"
+                const iinputValue = "give+me+insights+about+my+data"
                 const response = await fetch('https://instalytics-rag.fly.dev/api?question=' + iinputValue + '&insight_mode=true', {
                 method: 'GET',
                 headers: {
