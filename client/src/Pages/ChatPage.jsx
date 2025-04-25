@@ -260,30 +260,18 @@ const ChatPage = () => {
                                  onClick={e=> callAI(inputValue)}
                                 disabled={isLoading || !inputValue.trim()}
                             >
-                                {isLoading ? (
-                                    <div className="flex flex-col items-center justify-center space-y-3">
-                                        <div className="flex items-center justify-center space-x-2">
-                                            <div className="relative">
-                                                <div className="w-8 h-8 border-4 border-blue-400/30 rounded-full animate-spin border-t-blue-500"></div>
-                                                <div className="absolute top-0 left-0 w-8 h-8 border-4 border-transparent rounded-full animate-pulse border-t-violet-500 animate-[spin_3s_linear_infinite]"></div>
-                                            </div>
-                                            <span className="text-white/90 animate-pulse">
-                                                {loadingMessages[currentLoadingMessage]}
-                                            </span>
-                                        </div>
-                                        <div className="w-full bg-slate-700/30 rounded-full h-1.5">
-                                            <div className="bg-gradient-to-r from-blue-500 to-violet-500 h-1.5 rounded-full animate-[loading_2s_ease-in-out_infinite]"></div>
-                                        </div>
-                                    </div>
-                                ) : (
                                     <div className="flex items-center justify-center space-x-2">
                                         <Sparkles className="w-5 h-5 group-hover:animate-spin-slow" />
                                         <span>Ask a question?</span>
                                     </div>
-                                )}
                                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                             </button>
                         </div>
+                        {aioutputValue && (
+                            <div className="animate-fadeIn">
+                               <div dangerouslySetInnerHTML={{ __html: aioutputValue}} />
+                            </div>
+                        )}
                         {/* Enhanced Button */}
                         <div>
                             <button
@@ -292,7 +280,7 @@ const ChatPage = () => {
                                         : 'bg-gradient-to-r from-blue-600/80 to-violet-600/80 hover:from-blue-500/80 hover:to-violet-500/80 border border-white/10 hover:border-white/20'
                                     }`}
                                 onClick={runLangflow}
-                                disabled={isLoading || !inputValue.trim()}
+                                disabled={isLoading}
                             >
                                 {isLoading ? (
                                     <div className="flex flex-col items-center justify-center space-y-3">
@@ -312,7 +300,7 @@ const ChatPage = () => {
                                 ) : (
                                     <div className="flex items-center justify-center space-x-2">
                                         <Sparkles className="w-5 h-5 group-hover:animate-spin-slow" />
-                                        <span>Get Analysis</span>
+                                        <span>Get Profile Analysis</span>
                                     </div>
                                 )}
                                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
@@ -333,11 +321,7 @@ const ChatPage = () => {
                             </div>
                         )}
 
-                        {aioutputValue && (
-                            <div className="animate-fadeIn">
-                               <p> {aioutputValue} </p>
-                            </div>
-                        )}
+
                     </div>
                 </div>
             </div>
